@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -161,6 +162,12 @@ public class Auto_RedFar extends LinearOpMode {
                 AngleUnit.DEGREES
         );
 
+        Motor m_motor = new Motor(hardwareMap, "armLiftMotor", 8192, 60);
+        m_motor.setRunMode(Motor.RunMode.PositionControl);
+        m_motor.setPositionCoefficient(0.01);
+        int pos = m_motor.getCurrentPosition();
+        m_motor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        m_motor.setPositionTolerance(100);
         Pose2d startPose = new Pose2d(0, 0, 0);
         ElapsedTime timer = new ElapsedTime();
 
@@ -241,13 +248,20 @@ public class Auto_RedFar extends LinearOpMode {
             drive.followTrajectory(NF_12);
         }
         controlHubCam.stopStreaming();
+//Raise the arm
+        m_motor.setTargetPosition(pos - 400);
+        //m_motor.set(sp);
+        timer.reset();
+        while (!m_motor.atTargetPosition() && timer.seconds() < variables.timer_motor ){
+            m_motor.set(variables.speed_extender);
+        }
+        m_motor.stopMotor();
 
-        //drive.update();
-        //timer.reset();
-        //while (timer.seconds() < 1); //drive.update();
-
+//Drop the pixels with the Claw
         clawAngleServo.turnToAngle(variables.AutoCLawDown);
         timer.reset();
+        while (timer.seconds() < 1);// drive.update();
+
         if (position == variables.NOTDETECTED){
             clawRightServo.turnToAngle(variables.gripDegrees);
         }
@@ -259,10 +273,18 @@ public class Auto_RedFar extends LinearOpMode {
             clawRightServo.turnToAngle(variables.gripDegrees1);
         }
         clawLeftServo.turnToAngle(variables.gripDegrees);
+
         timer.reset();
         while (timer.seconds() < 1);// drive.update();
         clawAngleServo.turnToAngle(variables.AutoCLawPark);
         while (timer.seconds() < 2);
+        m_motor.setTargetPosition(pos);
+        //m_motor.set(sp);
+        timer.reset();
+        while (!m_motor.atTargetPosition() && timer.seconds() < variables.timer_motor ){
+            m_motor.set(variables.speed_extender);
+        }
+        m_motor.stopMotor();
         telemetry.addData("Coordinate", "(" + (int) cX + ", " + (int) cY + ")");
         telemetry.addData("Distance in Inch", (getDistance(width)));
         telemetry.update();

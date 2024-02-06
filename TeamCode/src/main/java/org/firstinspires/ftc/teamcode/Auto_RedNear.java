@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -23,6 +24,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
 @Autonomous
 public class Auto_RedNear extends LinearOpMode {
+    //creating Claw servos
     SimpleServo clawAngleServo;
     SimpleServo clawRightServo;
     SimpleServo clawLeftServo;
@@ -33,23 +35,21 @@ public class Auto_RedNear extends LinearOpMode {
     int position = 0;
 
 
-    private OpenCvCamera controlHubCam;  // Use OpenCvCamera class from FTC SDK
-    private static final int CAMERA_WIDTH = 640; // width  of wanted camera resolution
-    private static final int CAMERA_HEIGHT = 480; // height of wanted camera resolution
-
-    // Calculate the distance using the formula
-    public static final double objectWidthInRealWorldUnits = 3.75;  // Replace with the actual width of the object in real-world units
-    public static final double focalLength = 728;  // Replace with the focal length of the camera in pixels
+    private OpenCvCamera controlHubCam;  //OpenCvCamera class from FTC SDK
+    private static final int CAMERA_WIDTH = 640; // width of camera resolution
+    private static final int CAMERA_HEIGHT = 480; // Height of camera resolution
+    public static final double objectWidthInRealWorldUnits = 3.75;  // Width of the object in real-world units
+    public static final double focalLength = 728;  // Focal length of the camera in pixels
 
 
 
     private void initOpenCV() {
 
-        // Create an instance of the camera
+        // Create camera
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
-        // Use OpenCvCameraFactory class from FTC SDK to create camera instance
+        // Create camera instance (OpenCvCameraFactory class)
         controlHubCam = OpenCvCameraFactory.getInstance().createWebcam(
                 hardwareMap.get(WebcamName.class, "webcam1"), cameraMonitorViewId);
 
@@ -102,8 +102,7 @@ public class Auto_RedNear extends LinearOpMode {
 
         private Mat preprocessFrame(Mat frame) {
             Mat hsvFrame = new Mat();
-            Imgproc.cvtColor(frame, hsvFrame, Imgproc.COLOR_BGR2HSV);
-            //BLUE
+            Imgproc.cvtColor(frame, hsvFrame, Imgproc.COLOR_BGR2HSV); //RED
             Scalar lowerRed = new Scalar(100, 100, 100);
             Scalar upperRed = new Scalar(180, 255, 255);
 
@@ -146,6 +145,7 @@ public class Auto_RedNear extends LinearOpMode {
     }
     @Override
     public void runOpMode() throws InterruptedException {
+        //Initialize the Mecanum Drivetrain, Arm Motor and Claw servos
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         clawRightServo = new SimpleServo(
                 hardwareMap, "clawRightServo", 10, 120,
@@ -161,11 +161,19 @@ public class Auto_RedNear extends LinearOpMode {
                 AngleUnit.DEGREES
         );
 
+        Motor m_motor = new Motor(hardwareMap, "armLiftMotor", 8192, 60);
+        m_motor.setRunMode(Motor.RunMode.PositionControl);
+        m_motor.setPositionCoefficient(0.01);
+        int pos = m_motor.getCurrentPosition();
+        m_motor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        m_motor.setPositionTolerance(100);
         Pose2d startPose = new Pose2d(0, 0, 0);
         ElapsedTime timer = new ElapsedTime();
 
         drive.setPoseEstimate(startPose);
 
+
+        // Different Trajectories depending on which side the prop is
         Trajectory Center_1 = drive.trajectoryBuilder(startPose)
                 .back(variables.CenterBack)
                 .build();
@@ -178,7 +186,6 @@ public class Auto_RedNear extends LinearOpMode {
         Trajectory Left_13 = drive.trajectoryBuilder(Left_12.end().plus(new Pose2d(0,0,Math.toRadians(-140))))
                 .forward(variables.LeftForward)
                 .build();
-
         Trajectory Right_11 = drive.trajectoryBuilder(startPose)
                 .back(variables.RightBack)
                 .build();
@@ -192,16 +199,14 @@ public class Auto_RedNear extends LinearOpMode {
                 .forward (variables.NFForwardNear)
                 .build();
 
-
-
-
+        //Initialize OpenCV, FTCDashboard
         initOpenCV();
         FtcDashboard dashboard = FtcDashboard.getInstance();
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
         FtcDashboard.getInstance().startCameraStream(controlHubCam, 30);
 
         waitForStart();
-
+        //AUTONOMOUS start
         if (isStopRequested())
             return;
 
@@ -213,14 +218,17 @@ public class Auto_RedNear extends LinearOpMode {
         telemetry.addData("Coordinate", "(" + (int) cX + ", " + (int) cY + ")");
         telemetry.addData("Distance in Inch", (getDistance(width)));
         telemetry.update();
+        //BASED of the x coordinate figure out in which side the prop is
 
-        if ((int) cX > 200 && (int) cX < 400){
+        if ((int) cX > 200 && (int) cX < 400) //CENTER
+            {
             position = variables.CENTRE;
             drive.followTrajectory(Center_1);
 
         }
 
-        else if ((int) cX > 0 && (int) cX < 200){
+        else if ((int) cX > 0 && (int) cX < 200) //LEFT
+        {
             position = variables.LEFT;
             drive.followTrajectory(Left_11);
             drive.followTrajectory(Left_12);
@@ -228,26 +236,35 @@ public class Auto_RedNear extends LinearOpMode {
             drive.followTrajectory(Left_13);
 
         }
-        else if ((int) cX > 400 && (int) cX < 700){
+        else if ((int) cX > 400 && (int) cX < 700) //RIGHT
+        {
             position = variables.RIGHT;
             drive.followTrajectory(Right_11);
             drive.followTrajectory(Right_12);
 
         }
-        else {
+        else //NOTDETECTED
+        {
             position = variables.NOTDETECTED;
             drive.followTrajectory(NF_11);
             drive.turn(Math.toRadians(140));
             drive.followTrajectory(NF_12);
         }
         controlHubCam.stopStreaming();
+//Raise the arm
+        m_motor.setTargetPosition(pos - 400);
+        //m_motor.set(sp);
+        timer.reset();
+        while (!m_motor.atTargetPosition() && timer.seconds() < variables.timer_motor ){
+            m_motor.set(variables.speed_extender);
+        }
+        m_motor.stopMotor();
 
-        //drive.update();
-        //timer.reset();
-        //while (timer.seconds() < 1); //drive.update();
-
+//Drop the pixels with the Claw
         clawAngleServo.turnToAngle(variables.AutoCLawDown);
         timer.reset();
+        while (timer.seconds() < 1);// drive.update();
+
         if (position == variables.NOTDETECTED){
             clawRightServo.turnToAngle(variables.gripDegrees);
         }
@@ -259,10 +276,18 @@ public class Auto_RedNear extends LinearOpMode {
             clawRightServo.turnToAngle(variables.gripDegrees1);
         }
         clawLeftServo.turnToAngle(variables.gripDegrees);
+
         timer.reset();
         while (timer.seconds() < 1);// drive.update();
         clawAngleServo.turnToAngle(variables.AutoCLawPark);
         while (timer.seconds() < 2);
+        m_motor.setTargetPosition(pos);
+        //m_motor.set(sp);
+        timer.reset();
+        while (!m_motor.atTargetPosition() && timer.seconds() < variables.timer_motor ){
+            m_motor.set(variables.speed_extender);
+        }
+        m_motor.stopMotor();
         telemetry.addData("Coordinate", "(" + (int) cX + ", " + (int) cY + ")");
         telemetry.addData("Distance in Inch", (getDistance(width)));
         telemetry.update();

@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.util.variables;
 
 @TeleOp(name = "OpMode")
-public class OpMode extends LinearOpMode {
+public class TeleOP extends LinearOpMode {
     //Arm Motors and Claw servos
     private DcMotor armLiftMotor;
     private DcMotor armSlideMotor;

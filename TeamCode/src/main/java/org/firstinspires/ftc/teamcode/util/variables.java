@@ -31,22 +31,28 @@ public class variables {
     //Simple-auto Claw angles for pixel depositing and going back to park
     public static final double AutoCLawDown = 80;
     public static final double AutoCLawPark = 0;
+    //Auto positions (depending on where the prop is)
     public static final int NOTDETECTED = 0;
     public static final int LEFT = 1;
     public static final int CENTRE = 2;
     public static final int RIGHT = 3;
+    //Auto trajectory when the prop is in the center
     public static final double CenterBack = 60;
+    //Auto trajectory when the prop is in the left (for RedNear and BlueFar) and in the right (for RedFar and BlueNear)
     public static final double LeftBack = 40;
     public static final double LeftLeft = 12;
     public static final double LeftForward = 8;
+    //Auto trajectory when the prop is in the right (for RedNear and BlueFar) and in the left (for RedFar and BlueNear)
     public static final double RightBack = 53;
     public static final double RightLeft = 31;
+    //Auto trajectory when the prop is not found (Near)
     public static final double NFBackNear = 10;
     public static final double NFForwardNear = 40;
+    //Auto trajectory when the prop is not found (Far)
     public static final double NFBackFar = 65;
     public static final double NFForwardFar = 100;
-    public static final double RightLeft1 = 22;
     public static final double NFBackFar1 = 60;
+    public static final double RightLeft1 = 22;
 
 
 
