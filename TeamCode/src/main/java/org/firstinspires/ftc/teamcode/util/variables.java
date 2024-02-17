@@ -16,7 +16,7 @@ public class variables {
     public static final double gripDegrees1 = 82;
 
     //Arm turning position for the Backboard
-    public static final int nearBoard = 2850;
+    public static final int nearBoard = 2950;
     //Arm extending position for pixel grabbing
     public static final int reachingHigh = 1350;
     //Arm extending position for near the Backboard
@@ -27,9 +27,9 @@ public class variables {
     //Claw angle for Grabbing pixels (parallel with the Ground)
     public static final int ClawAngleGrab = 76;
     //Claw angle for Depositing pixels (parallel with the Backboard)
-    public static final int ClawAngleDeposit = 90;
+    public static final int ClawAngleDeposit = 85;
     //Simple-auto Claw angles for pixel depositing and going back to park
-    public static final double AutoCLawDown = 75;
+    public static final double AutoCLawDown = 70;
     public static final double AutoCLawPark = 0;
     //Auto positions (depending on where the prop is)
     public static final int NOTDETECTED = 0;
@@ -37,13 +37,13 @@ public class variables {
     public static final int CENTRE = 2;
     public static final int RIGHT = 3;
     //Auto trajectory when the prop is in the center
-    public static final double CenterBack = 60;
+    public static final double CenterBack = 30;
     //Auto trajectory when the prop is in the left (for RedNear and BlueFar) and in the right (for RedFar and BlueNear)
-    public static final double LeftBack = 29;
+    public static final double LeftBack = 30;
     public static final double LeftLeft = 12;
     public static final double LeftForward = 8;
     //Auto trajectory when the prop is in the right (for RedNear and BlueFar) and in the left (for RedFar and BlueNear)
-    public static final double RightBack = 44.4;
+    public static final double RightBack = 23;
     public static final double RightLeft = 13;
     //Auto trajectory when the prop is not found (Near)
     public static final double NFBackNear = 10;

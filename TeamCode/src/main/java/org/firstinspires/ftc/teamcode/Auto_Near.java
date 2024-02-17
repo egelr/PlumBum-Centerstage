@@ -182,9 +182,7 @@ public class Auto_Near extends LinearOpMode {
         Trajectory Right_11 = drive.trajectoryBuilder(startPose)
                 .back(variables.RightBack)
                 .build();
-        Trajectory Right_12 = drive.trajectoryBuilder(Right_11.end())
-                .strafeLeft(variables.RightLeft)
-                .build();
+
 
 
         initOpenCV();
@@ -223,7 +221,6 @@ public class Auto_Near extends LinearOpMode {
         else if ((int) cX > 400 && (int) cX < 700){
             position = variables.RIGHT;
             drive.followTrajectory(Right_11);
-            drive.followTrajectory(Right_12);
 
         }
         controlHubCam.stopStreaming();
