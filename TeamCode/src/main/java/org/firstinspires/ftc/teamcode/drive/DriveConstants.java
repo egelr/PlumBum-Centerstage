@@ -22,7 +22,7 @@ public class DriveConstants {
     /*
      * These are motor constants that should be listed online for your motors.
      */
-    public static final double TICKS_PER_REV = 2000;
+    public static final double TICKS_PER_REV = 537.6;
     public static final double MAX_RPM = 312;
 
     /*
@@ -45,9 +45,9 @@ public class DriveConstants {
      * angular distances although most angular parameters are wrapped in Math.toRadians() for
      * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
      */
-    public static double WHEEL_RADIUS = 1.89; //1.55; // in
+    public static double WHEEL_RADIUS = 1.8898; //1.55; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 15.5; // in
+    public static double TRACK_WIDTH = 12.61; //16.36
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -55,9 +55,9 @@ public class DriveConstants {
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
+    public static double kV = 0.01696;//(1.0 / rpmToVelocity(MAX_RPM)); //*1.14;
     public static double kA = 0;
-    public static double kStatic = 0;
+    public static double kStatic = 0.06827;
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
@@ -87,10 +87,10 @@ public class DriveConstants {
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
 
      */
-    public static double MAX_VEL = 52.48291908330528;
-    public static double MAX_ACCEL = 52.48291908330528;
-    public static double MAX_ANG_VEL = Math.toRadians(261.4795);
-    public static double MAX_ANG_ACCEL = Math.toRadians(263.7762947368421);
+    public static double MAX_VEL = 46;//52.48291908330528;
+    public static double MAX_ACCEL = 46;//52.48291908330528;
+    public static double MAX_ANG_VEL = Math.toRadians(215.41083365701544);//Math.toRadians(222.4514);//3.62126;
+    public static double MAX_ANG_ACCEL = Math.toRadians(215.41083365701544);
 
 
     public static double encoderTicksToInches(double ticks) {

@@ -103,9 +103,9 @@ public class TeleOP extends LinearOpMode {
         while (!isStopRequested()) {
             //Drivetrain controls
             drive.driveRobotCentric(
-                    gamepad1.left_stick_x * drive_speed,
-                    -gamepad1.left_stick_y * drive_speed,
-                    gamepad1.right_stick_x * drive_speed,
+                    -gamepad1.left_stick_x * drive_speed,
+                    gamepad1.left_stick_y * drive_speed,
+                    -gamepad1.right_stick_x * drive_speed,
                     false
 
             );

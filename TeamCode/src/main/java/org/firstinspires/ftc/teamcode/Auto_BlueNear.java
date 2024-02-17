@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
@@ -167,36 +168,50 @@ public class Auto_BlueNear extends LinearOpMode {
         int pos = m_motor.getCurrentPosition();
         m_motor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         m_motor.setPositionTolerance(100);
-        Pose2d startPose = new Pose2d(0, 0, 0);
+        Pose2d startPose = new Pose2d(0, 0);
         ElapsedTime timer = new ElapsedTime();
 
         drive.setPoseEstimate(startPose);
 
         Trajectory Center_1 = drive.trajectoryBuilder(startPose)
-                .back(variables.CenterBack)
+                .forward(variables.CenterBack)
+                .build();
+        Trajectory Center_2 = drive.trajectoryBuilder(Center_1.end().plus(new Pose2d(0,0,Math.toRadians(90))))
+                .forward(25)
+                .build();
+        Trajectory Center_3 = drive.trajectoryBuilder(Center_2.end().plus(new Pose2d(0,0,Math.toRadians(90))))
+                .forward(26)
+                .build();
+        Trajectory Center_4 = drive.trajectoryBuilder(Center_3.end().plus(new Pose2d(0,0,Math.toRadians(-90))))
+                .forward(27)
+                .build();
+        Trajectory Center_5 = drive.trajectoryBuilder(Center_4.end())
+                .back(10)
                 .build();
         Trajectory Left_11 = drive.trajectoryBuilder(startPose)
-                .back(variables.LeftBack)
+                .splineTo(new Vector2d(variables.LeftBack,15),Math.toRadians(90))
                 .build();
         Trajectory Left_12 = drive.trajectoryBuilder(Left_11.end())
-                .strafeLeft(-1*(variables.LeftLeft))
+                .back(18.5)
                 .build();
         Trajectory Left_13 = drive.trajectoryBuilder(Left_12.end().plus(new Pose2d(0,0,Math.toRadians(-140))))
                 .forward(variables.LeftForward)
                 .build();
-
-        Trajectory Right_11 = drive.trajectoryBuilder(startPose)
+        Trajectory Right_12 = drive.trajectoryBuilder(startPose)
+                .splineTo(new Vector2d(variables.RightBack,variables.RightLeft),0)
+                .build();
+        Trajectory Right_11 = drive.trajectoryBuilder(Right_12.end())
                 .back(variables.RightBack)
                 .build();
-        Trajectory Right_12 = drive.trajectoryBuilder(Right_11.end())
-                .strafeLeft(-1*(variables.RightLeft))
-                .build();
+
         Trajectory NF_11 = drive.trajectoryBuilder(startPose)
                 .back (variables.NFBackNear)
                 .build();
         Trajectory NF_12 = drive.trajectoryBuilder(NF_11.end().plus(new Pose2d(0,0,Math.toRadians(-140))))
                 .forward (variables.NFForwardNear)
                 .build();
+
+
 
 
 
@@ -213,7 +228,7 @@ public class Auto_BlueNear extends LinearOpMode {
         clawRightServo.turnToAngle(variables.gripDegrees1);
         clawLeftServo.turnToAngle(variables.gripDegrees);
         timer.reset();
-        while (timer.seconds() < 2);
+        while (timer.seconds() < 1);
 
         telemetry.addData("Coordinate", "(" + (int) cX + ", " + (int) cY + ")");
         telemetry.addData("Distance in Inch", (getDistance(width)));
@@ -227,16 +242,27 @@ public class Auto_BlueNear extends LinearOpMode {
 
         else if ((int) cX > 0 && (int) cX < 200){
             position = variables.LEFT;
-            drive.followTrajectory(Right_11);
             drive.followTrajectory(Right_12);
+            //drive.followTrajectory(Right_11);
 
         }
         else if ((int) cX > 400 && (int) cX < 700){
             position = variables.RIGHT;
             drive.followTrajectory(Left_11);
+            m_motor.setTargetPosition(pos - 200);
+            //m_motor.set(sp);
+            timer.reset();
+            while (!m_motor.atTargetPosition() && timer.seconds() < variables.timer_motor ){
+                m_motor.set(variables.speed_extender);
+            }
+
+
+            clawAngleServo.turnToAngle(variables.AutoCLawDown);
+            timer.reset();
+            while (timer.seconds() < 0.3);
             drive.followTrajectory(Left_12);
-            drive.turn(Math.toRadians(140));
-            drive.followTrajectory(Left_13);
+            //drive.turn(Math.toRadians(140));
+            //drive.followTrajectory(Left_13);
 
 
         }
@@ -252,18 +278,17 @@ public class Auto_BlueNear extends LinearOpMode {
         //timer.reset();
         //while (timer.seconds() < 1); //drive.update();
 
-        m_motor.setTargetPosition(pos - 400);
+        m_motor.setTargetPosition(pos - 200);
         //m_motor.set(sp);
         timer.reset();
         while (!m_motor.atTargetPosition() && timer.seconds() < variables.timer_motor ){
             m_motor.set(variables.speed_extender);
         }
-        m_motor.stopMotor();
 
 
         clawAngleServo.turnToAngle(variables.AutoCLawDown);
         timer.reset();
-        while (timer.seconds() < 1);// drive.update();
+        while (timer.seconds() < 0.5);// drive.update();
 
         if (position == variables.NOTDETECTED){
             clawRightServo.turnToAngle(variables.gripDegrees);
@@ -276,6 +301,7 @@ public class Auto_BlueNear extends LinearOpMode {
             clawRightServo.turnToAngle(variables.gripDegrees1);
         }
         clawLeftServo.turnToAngle(variables.gripDegrees);
+        m_motor.stopMotor();
 
         timer.reset();
         while (timer.seconds() < 1);// drive.update();
@@ -288,6 +314,45 @@ public class Auto_BlueNear extends LinearOpMode {
             m_motor.set(variables.speed_extender);
         }
         m_motor.stopMotor();
+        if (position == variables.CENTRE){
+            drive.turn(Math.toRadians(90));
+            drive.followTrajectory(Center_2);
+            drive.turn(Math.toRadians(90));
+            drive.followTrajectory(Center_3);
+            drive.turn(Math.toRadians(-90));
+            clawAngleServo.turnToAngle(variables.ClawAngleDeposit);
+            m_motor.setTargetPosition(pos - variables.nearBoard);
+            timer.reset();
+            while (!m_motor.atTargetPosition() && timer.seconds() < variables.timer_motor ){
+                m_motor.set(variables.speed_arm);
+            }
+            m_motor.stopMotor();
+            drive.followTrajectory(Center_4);
+            drive.turn(Math.toRadians(-17));
+            timer.reset();
+            while ( timer.seconds() < 0.5 ) {
+            }
+            clawRightServo.turnToAngle(variables.gripDegrees);
+            timer.reset();
+            while ( timer.seconds() < 0.5 ) {
+            }
+            drive.followTrajectory(Center_5);
+            clawRightServo.turnToAngle(variables.gripDegrees1);
+            timer.reset();
+            while ( timer.seconds() < 0.5 ) {
+            }
+            m_motor.setTargetPosition(pos);
+            clawAngleServo.turnToAngle(variables.AutoCLawPark);
+            timer.reset();
+            while (!m_motor.atTargetPosition() && timer.seconds() < variables.timer_motor ){
+                m_motor.set(variables.speed_arm);
+            }
+            m_motor.stopMotor();
+            timer.reset();
+            while ( timer.seconds() < 0.5 ) {
+            }
+
+        }
         telemetry.addData("Coordinate", "(" + (int) cX + ", " + (int) cY + ")");
         telemetry.addData("Distance in Inch", (getDistance(width)));
         telemetry.update();
