@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
@@ -41,7 +42,9 @@ public class Auto_RedFar extends LinearOpMode {
     // Calculate the distance using the formula
     public static final double objectWidthInRealWorldUnits = 3.75;  // Replace with the actual width of the object in real-world units
     public static final double focalLength = 728;  // Replace with the focal length of the camera in pixels
-
+    public ElapsedTime timer;
+    public Motor m_motor;
+    public int pos;
 
 
     private void initOpenCV() {
@@ -161,45 +164,75 @@ public class Auto_RedFar extends LinearOpMode {
                 hardwareMap, "clawAngleServo", 0, 180,
                 AngleUnit.DEGREES
         );
-
-        Motor m_motor = new Motor(hardwareMap, "armLiftMotor", 8192, 60);
+        m_motor = new Motor(hardwareMap, "armLiftMotor", 8192, 60);
         m_motor.setRunMode(Motor.RunMode.PositionControl);
         m_motor.setPositionCoefficient(0.01);
-        int pos = m_motor.getCurrentPosition();
+        pos = m_motor.getCurrentPosition();
         m_motor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         m_motor.setPositionTolerance(100);
-        Pose2d startPose = new Pose2d(0, 0, 0);
-        ElapsedTime timer = new ElapsedTime();
+        Pose2d startPose = new Pose2d(0, 0);
+        timer = new ElapsedTime();
 
         drive.setPoseEstimate(startPose);
 
         Trajectory Center_1 = drive.trajectoryBuilder(startPose)
-                .back(variables.CenterBack)
+                .splineTo(new Vector2d(variables.CenterBack, 0), 0)
+                .build();
+        Trajectory Center_2 = drive.trajectoryBuilder(Center_1.end(),true)
+                .splineTo(new Vector2d(29, 34), Math.toRadians(90))
+                .build();
+        Trajectory Center_3 = drive.trajectoryBuilder(Center_2.end())
+                .back (8)
+                .build();
+        Trajectory Center_4 = drive.trajectoryBuilder(Center_3.end())
+                .strafeRight(23)
+                .build();
+        Trajectory Center_5 = drive.trajectoryBuilder(Center_4.end())
+                .back(10)
                 .build();
         Trajectory Left_11 = drive.trajectoryBuilder(startPose)
-                .back(variables.LeftBack)
+                .splineTo (new Vector2d(variables.LeftBack, 5), Math.toRadians(-90))
+                .forward(5)
                 .build();
-        Trajectory Left_12 = drive.trajectoryBuilder(Left_11.end())
-                .strafeLeft(-1*(variables.LeftLeft))
+        Trajectory Left_12 = drive.trajectoryBuilder(Left_11.end(), true)
+                .splineTo(new Vector2d(34, 34), Math.toRadians(90))
                 .build();
-        Trajectory Left_13 = drive.trajectoryBuilder(Left_12.end().plus(new Pose2d(0,0,Math.toRadians(140))))
-                .forward(variables.LeftForward)
+        Trajectory Left_13 = drive.trajectoryBuilder(Left_12.end())
+                .back (8)
                 .build();
-
+        Trajectory Left_14 = drive.trajectoryBuilder(Left_13.end())
+                .strafeRight(28)
+                .build();
+        Trajectory Left_15 = drive.trajectoryBuilder(Left_14.end())
+                .back(10)
+                .build();
         Trajectory Right_11 = drive.trajectoryBuilder(startPose)
-                .back(variables.RightBack)
+                .splineTo(new Vector2d(variables.RightBack, 12), 0)
                 .build();
-        Trajectory Right_12 = drive.trajectoryBuilder(Right_11.end())
-                .strafeLeft(-1*(variables.RightLeft))
+        Trajectory Right_12 = drive.trajectoryBuilder(Right_11.end(), true)
+                .splineTo(new Vector2d(24, 34), Math.toRadians(90))
+                .build();
+        Trajectory Right_13 = drive.trajectoryBuilder(Right_12.end())
+                .back (8)
+                .build();
+        Trajectory Right_14 = drive.trajectoryBuilder(Right_13.end())
+                .strafeRight(18)
+                .build();
+        Trajectory Right_15 = drive.trajectoryBuilder(Right_14.end())
+                .back(10)
                 .build();
         Trajectory NF_11 = drive.trajectoryBuilder(startPose)
-                .back (variables.NFBackFar1)
+                .splineTo(new Vector2d(29, 30), Math.toRadians(270))
                 .build();
-        Trajectory NF_12 = drive.trajectoryBuilder(NF_11.end().plus(new Pose2d(0,0,Math.toRadians(136))))
-                .forward (variables.NFForwardFar)
+        Trajectory NF_12 = drive.trajectoryBuilder(NF_11.end())
+                .back (12)
                 .build();
-
-
+        Trajectory NF_13 = drive.trajectoryBuilder(NF_12.end())
+                .strafeRight(23)
+                .build();
+        Trajectory NF_14 = drive.trajectoryBuilder(NF_13.end())
+                .back(10)
+                .build();
 
         initOpenCV();
         FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -213,87 +246,140 @@ public class Auto_RedFar extends LinearOpMode {
 
         clawRightServo.turnToAngle(variables.gripDegrees1);
         clawLeftServo.turnToAngle(variables.gripDegrees);
+        clawAngleServo.turnToAngle(variables.AutoCLawDown);
         timer.reset();
-        while (timer.seconds() < 2);
+        while (timer.seconds() < 1);
 
-        telemetry.addData("Coordinate", "(" + (int) cX + ", " + (int) cY + ")");
-        telemetry.addData("Distance in Inch", (getDistance(width)));
-        telemetry.update();
 
         if ((int) cX > 200 && (int) cX < 400){
             position = variables.CENTRE;
             drive.followTrajectory(Center_1);
-
         }
 
         else if ((int) cX > 0 && (int) cX < 200){
             position = variables.LEFT;
             drive.followTrajectory(Right_11);
-            drive.followTrajectory(Right_12);
-
         }
         else if ((int) cX > 400 && (int) cX < 700){
             position = variables.RIGHT;
             drive.followTrajectory(Left_11);
-            drive.followTrajectory(Left_12);
-            drive.turn(Math.toRadians(-140));
-            drive.followTrajectory(Left_13);
-
 
         }
         else {
             position = variables.NOTDETECTED;
+            ClawPark();
             drive.followTrajectory(NF_11);
-            drive.turn(Math.toRadians(136));
-            drive.followTrajectory(NF_12);
         }
         controlHubCam.stopStreaming();
-//Raise the arm
-        m_motor.setTargetPosition(pos - 400);
-        //m_motor.set(sp);
-        timer.reset();
-        while (!m_motor.atTargetPosition() && timer.seconds() < variables.timer_motor ){
-            m_motor.set(variables.speed_extender);
-        }
-        m_motor.stopMotor();
 
-//Drop the pixels with the Claw
-        clawAngleServo.turnToAngle(variables.AutoCLawDown);
-        timer.reset();
-        while (timer.seconds() < 1);// drive.update();
 
-        if (position == variables.NOTDETECTED){
-            clawRightServo.turnToAngle(variables.gripDegrees);
+        if (position != variables.NOTDETECTED) {
+            DropPixel(true, false);
+            ClawPark();
         }
-        clawLeftServo.turnToAngle(variables.gripDegrees1);
-        timer.reset();
-        while (timer.seconds() < 2);// drive.update();
 
-        if (position == variables.NOTDETECTED){
-            clawRightServo.turnToAngle(variables.gripDegrees1);
+        if (position == variables.NOTDETECTED) {
+            ArmUP();
+            drive.followTrajectory(NF_12);
+            DropPixel(true, true);
+            ArmFromBoard();
+            ArmPark();
+            drive.followTrajectory(NF_13);
+            drive.followTrajectory(NF_14);
         }
-        clawLeftServo.turnToAngle(variables.gripDegrees);
 
-        timer.reset();
-        while (timer.seconds() < 1);// drive.update();
-        clawAngleServo.turnToAngle(variables.AutoCLawPark);
-        while (timer.seconds() < 2);
-        m_motor.setTargetPosition(pos);
-        //m_motor.set(sp);
-        timer.reset();
-        while (!m_motor.atTargetPosition() && timer.seconds() < variables.timer_motor ){
-            m_motor.set(variables.speed_extender);
+        if (position == variables.CENTRE){
+            drive.followTrajectory(Center_2);
+            ArmUP();
+            drive.followTrajectory(Center_3);
+            DropPixel(false, true);
+            ArmFromBoard();
+            ArmPark();
+            drive.followTrajectory(Center_4);
+            drive.followTrajectory(Center_5);
+
         }
-        m_motor.stopMotor();
-        telemetry.addData("Coordinate", "(" + (int) cX + ", " + (int) cY + ")");
-        telemetry.addData("Distance in Inch", (getDistance(width)));
-        telemetry.update();
+        if (position == variables.LEFT){
+            drive.followTrajectory(Right_12);
+            ArmUP();
+            drive.followTrajectory(Right_13);
+            DropPixel(false, true);
+            ArmFromBoard();
+            ArmPark();
+            drive.followTrajectory(Right_14);
+            drive.followTrajectory(Right_15);
+
+        }
+        if (position == variables.RIGHT){
+            drive.followTrajectory(Left_12);
+            ArmUP();
+            drive.followTrajectory(Left_13);
+            DropPixel(false, true);
+            ArmFromBoard();
+            ArmPark();
+            drive.followTrajectory(Left_14);
+            drive.followTrajectory(Left_15);
+
+        }
 
 
         // Release resources
 
     }
 
+
+
+    void ClawDown()
+    {
+        clawAngleServo.turnToAngle(variables.AutoCLawDown);
+    /*timer.reset();
+    while (timer.seconds() < 1);
+*/
+    }
+    void DropPixel(boolean Purple, boolean Yellow)
+    {
+        if (Purple) clawLeftServo.turnToAngle(variables.gripDegrees1);
+        if (Yellow) clawRightServo.turnToAngle(variables.gripDegrees);
+        timer.reset();
+        while (timer.seconds() < 0.2) ;
+
+    }
+    void ClawPark()
+    {
+
+        clawLeftServo.turnToAngle(variables.gripDegrees);
+        clawRightServo.turnToAngle(variables.gripDegrees1);
+        clawAngleServo.turnToAngle(variables.AutoCLawPark);
+
+    }
+    void ArmUP()
+    {
+        clawAngleServo.turnToAngle(variables.ClawAngleDeposit);
+        m_motor.setTargetPosition(pos - variables.nearBoard);
+        timer.reset();
+        while (!m_motor.atTargetPosition() && timer.seconds() < variables.timer_motor ){
+            m_motor.set(variables.speed_arm);
+        }
+        m_motor.stopMotor();
+    }
+    void ArmFromBoard()
+    {
+        clawAngleServo.turnToAngle(variables.ClawAngleDeposit);
+        m_motor.setTargetPosition(pos - variables.nearBoard+200);
+        timer.reset();
+        while (!m_motor.atTargetPosition() && timer.seconds() < variables.timer_motor ){
+            m_motor.set(variables.speed_arm);
+        }
+        m_motor.stopMotor();
+    }
+    void ArmPark(){
+        ClawPark();
+        m_motor.setTargetPosition(pos);
+        timer.reset();
+        while (!m_motor.atTargetPosition() && timer.seconds() < variables.timer_motor ){
+            m_motor.set(variables.speed_arm);
+        }
+        m_motor.stopMotor();
+
+    }
 }
-
-
