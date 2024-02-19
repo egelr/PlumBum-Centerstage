@@ -178,8 +178,17 @@ public class Auto_RedFar extends LinearOpMode {
         Trajectory Center_1 = drive.trajectoryBuilder(startPose)
                 .splineTo(new Vector2d(variables.CenterBack, 0), 0)
                 .build();
-        Trajectory Center_2 = drive.trajectoryBuilder(Center_1.end(),true)
-                .splineTo(new Vector2d(29, 34), Math.toRadians(90))
+        Trajectory Center_15 = drive.trajectoryBuilder(Center_1.end())
+                .strafeLeft(15)
+                .build();
+        Trajectory Center_16 = drive.trajectoryBuilder(Center_15.end())
+                .forward(22)
+                .build();
+        Trajectory Center_17 = drive.trajectoryBuilder(Center_16.end().plus(new Pose2d(0,0,Math.toRadians(90))))
+                .back(70)
+                .build();
+        Trajectory Center_2 = drive.trajectoryBuilder(Center_17.end(),true)
+                .splineTo(new Vector2d(29, -80), Math.toRadians(-90))
                 .build();
         Trajectory Center_3 = drive.trajectoryBuilder(Center_2.end())
                 .back (8)
@@ -194,11 +203,20 @@ public class Auto_RedFar extends LinearOpMode {
                 .splineTo (new Vector2d(variables.LeftBack, 5), Math.toRadians(-90))
                 .forward(5)
                 .build();
-        Trajectory Left_12 = drive.trajectoryBuilder(Left_11.end(), true)
-                .splineTo(new Vector2d(34, 34), Math.toRadians(90))
+        Trajectory Left_115 = drive.trajectoryBuilder(Left_11.end())
+                .back(7)
+                .build();
+        Trajectory Left_116 = drive.trajectoryBuilder(Left_115.end())
+                .strafeLeft(23)
+                .build();
+        Trajectory Left_117 = drive.trajectoryBuilder(Left_116.end().plus(new Pose2d(0,0,Math.toRadians(180))))
+                .back(70)
+                .build();
+        Trajectory Left_12 = drive.trajectoryBuilder(Left_117.end(), true)
+                .splineTo(new Vector2d(24, -80), Math.toRadians(-90))
                 .build();
         Trajectory Left_13 = drive.trajectoryBuilder(Left_12.end())
-                .back (8)
+                .back (7)
                 .build();
         Trajectory Left_14 = drive.trajectoryBuilder(Left_13.end())
                 .strafeRight(28)
@@ -207,13 +225,22 @@ public class Auto_RedFar extends LinearOpMode {
                 .back(10)
                 .build();
         Trajectory Right_11 = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(variables.RightBack, 12), 0)
+                .splineTo(new Vector2d(variables.RightBack, 11.5), 0)
                 .build();
-        Trajectory Right_12 = drive.trajectoryBuilder(Right_11.end(), true)
-                .splineTo(new Vector2d(24, 34), Math.toRadians(90))
+        Trajectory Right_115 = drive.trajectoryBuilder(Right_11.end())
+                .strafeRight(12)
+                .build();
+        Trajectory Right_116 = drive.trajectoryBuilder(Right_115.end())
+                .forward(27)
+                .build();
+        Trajectory Right_117 = drive.trajectoryBuilder(Right_116.end().plus(new Pose2d(0,0,Math.toRadians(90))))
+                .back(70)
+                .build();
+        Trajectory Right_12 = drive.trajectoryBuilder(Right_117.end(), true)
+                .splineTo(new Vector2d(30, -80), Math.toRadians(-90))
                 .build();
         Trajectory Right_13 = drive.trajectoryBuilder(Right_12.end())
-                .back (8)
+                .back (7)
                 .build();
         Trajectory Right_14 = drive.trajectoryBuilder(Right_13.end())
                 .strafeRight(18)
@@ -221,11 +248,17 @@ public class Auto_RedFar extends LinearOpMode {
         Trajectory Right_15 = drive.trajectoryBuilder(Right_14.end())
                 .back(10)
                 .build();
-        Trajectory NF_11 = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(29, 30), Math.toRadians(270))
+        Trajectory NF_01 = drive.trajectoryBuilder(startPose)
+                .forward(50)
+                .build();
+        Trajectory NF_02 = drive.trajectoryBuilder(NF_01.end().plus(new Pose2d(0,0,Math.toRadians(90))))
+                .back(70)
+                .build();
+        Trajectory NF_11 = drive.trajectoryBuilder(NF_02.end(), true)
+                .splineTo(new Vector2d(29, -80), Math.toRadians(-90))
                 .build();
         Trajectory NF_12 = drive.trajectoryBuilder(NF_11.end())
-                .back (12)
+                .back (8)
                 .build();
         Trajectory NF_13 = drive.trajectoryBuilder(NF_12.end())
                 .strafeRight(23)
@@ -268,6 +301,9 @@ public class Auto_RedFar extends LinearOpMode {
         else {
             position = variables.NOTDETECTED;
             ClawPark();
+            drive.followTrajectory(NF_01);
+            drive.turn(Math.toRadians(90));
+            drive.followTrajectory(NF_02);
             drive.followTrajectory(NF_11);
         }
         controlHubCam.stopStreaming();
@@ -289,6 +325,10 @@ public class Auto_RedFar extends LinearOpMode {
         }
 
         if (position == variables.CENTRE){
+            drive.followTrajectory(Center_15);
+            drive.followTrajectory(Center_16);
+            drive.turn(Math.toRadians(90));
+            drive.followTrajectory(Center_17);
             drive.followTrajectory(Center_2);
             ArmUP();
             drive.followTrajectory(Center_3);
@@ -300,6 +340,10 @@ public class Auto_RedFar extends LinearOpMode {
 
         }
         if (position == variables.LEFT){
+            drive.followTrajectory(Right_115);
+            drive.followTrajectory(Right_116);
+            drive.turn(Math.toRadians(90));
+            drive.followTrajectory(Right_117);
             drive.followTrajectory(Right_12);
             ArmUP();
             drive.followTrajectory(Right_13);
@@ -311,6 +355,10 @@ public class Auto_RedFar extends LinearOpMode {
 
         }
         if (position == variables.RIGHT){
+            drive.followTrajectory(Left_115);
+            drive.followTrajectory(Left_116);
+            drive.turn(Math.toRadians(180));
+            drive.followTrajectory(Left_117);
             drive.followTrajectory(Left_12);
             ArmUP();
             drive.followTrajectory(Left_13);
@@ -319,6 +367,7 @@ public class Auto_RedFar extends LinearOpMode {
             ArmPark();
             drive.followTrajectory(Left_14);
             drive.followTrajectory(Left_15);
+
 
         }
 
