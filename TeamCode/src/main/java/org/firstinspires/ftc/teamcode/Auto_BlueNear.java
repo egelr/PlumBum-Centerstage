@@ -188,35 +188,35 @@ public class Auto_BlueNear extends LinearOpMode {
         Trajectory Center_5 = drive.trajectoryBuilder(Center_4.end())
                 .back(10)
                 .build();
-        Trajectory Left_11 = drive.trajectoryBuilder(startPose)
+        Trajectory Free_11 = drive.trajectoryBuilder(startPose)
                 .splineTo (new Vector2d(variables.LeftBack, 5), Math.toRadians(-90))
                 .forward(5)
                 .build();
-        Trajectory Left_12 = drive.trajectoryBuilder(Left_11.end(), true)
+        Trajectory Free_12 = drive.trajectoryBuilder(Free_11.end(), true)
                 .splineTo(new Vector2d(34, 34), Math.toRadians(90))
                 .build();
-        Trajectory Left_13 = drive.trajectoryBuilder(Left_12.end())
+        Trajectory Free_13 = drive.trajectoryBuilder(Free_12.end())
                 .back (8)
                 .build();
-        Trajectory Left_14 = drive.trajectoryBuilder(Left_13.end())
+        Trajectory Free_14 = drive.trajectoryBuilder(Free_13.end())
                 .strafeRight(28)
                 .build();
-        Trajectory Left_15 = drive.trajectoryBuilder(Left_14.end())
+        Trajectory Free_15 = drive.trajectoryBuilder(Free_14.end())
                 .back(10)
                 .build();
-        Trajectory Right_11 = drive.trajectoryBuilder(startPose)
+        Trajectory Obs_11 = drive.trajectoryBuilder(startPose)
                 .splineTo(new Vector2d(variables.RightBack, 12), 0)
                 .build();
-        Trajectory Right_12 = drive.trajectoryBuilder(Right_11.end(), true)
+        Trajectory Obs_12 = drive.trajectoryBuilder(Obs_11.end(), true)
                 .splineTo(new Vector2d(24, 34), Math.toRadians(90))
                 .build();
-        Trajectory Right_13 = drive.trajectoryBuilder(Right_12.end())
+        Trajectory Obs_13 = drive.trajectoryBuilder(Obs_12.end())
                 .back (8)
                 .build();
-        Trajectory Right_14 = drive.trajectoryBuilder(Right_13.end())
+        Trajectory Obs_14 = drive.trajectoryBuilder(Obs_13.end())
                 .strafeRight(18)
                 .build();
-        Trajectory Right_15 = drive.trajectoryBuilder(Right_14.end())
+        Trajectory Obs_15 = drive.trajectoryBuilder(Obs_14.end())
                 .back(10)
                 .build();
         Trajectory NF_11 = drive.trajectoryBuilder(startPose)
@@ -256,11 +256,11 @@ public class Auto_BlueNear extends LinearOpMode {
 
         else if ((int) cX > 0 && (int) cX < 200){
             position = variables.LEFT;
-            drive.followTrajectory(Right_11);
+            drive.followTrajectory(Obs_11);
         }
         else if ((int) cX > 400 && (int) cX < 700){
             position = variables.RIGHT;
-            drive.followTrajectory(Left_11);
+            drive.followTrajectory(Free_11);
 
         }
         else {
@@ -298,25 +298,25 @@ public class Auto_BlueNear extends LinearOpMode {
 
         }
         if (position == variables.LEFT){
-            drive.followTrajectory(Right_12);
+            drive.followTrajectory(Obs_12);
             ArmUP();
-            drive.followTrajectory(Right_13);
+            drive.followTrajectory(Obs_13);
             DropPixel(false, true);
             ArmFromBoard();
             ArmPark();
-            drive.followTrajectory(Right_14);
-            drive.followTrajectory(Right_15);
+            drive.followTrajectory(Obs_14);
+            drive.followTrajectory(Obs_15);
 
         }
         if (position == variables.RIGHT){
-            drive.followTrajectory(Left_12);
+            drive.followTrajectory(Free_12);
             ArmUP();
-            drive.followTrajectory(Left_13);
+            drive.followTrajectory(Free_13);
             DropPixel(false, true);
             ArmFromBoard();
             ArmPark();
-            drive.followTrajectory(Left_14);
-            drive.followTrajectory(Left_15);
+            drive.followTrajectory(Free_14);
+            drive.followTrajectory(Free_15);
 
         }
 

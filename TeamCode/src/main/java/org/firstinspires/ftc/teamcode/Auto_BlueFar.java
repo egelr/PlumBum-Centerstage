@@ -198,53 +198,53 @@ public class Auto_BlueFar extends LinearOpMode {
         Trajectory Center_5 = drive.trajectoryBuilder(Center_4.end())
                 .back(10)
                 .build();
-        Trajectory Left_11 = drive.trajectoryBuilder(startPose)
+        Trajectory Obs_11 = drive.trajectoryBuilder(startPose)
                 .splineTo (new Vector2d(31, -5), Math.toRadians(90))
                 .forward(5)
                 .build();
-        Trajectory Left_115 = drive.trajectoryBuilder(Left_11.end())
+        Trajectory Obs_115 = drive.trajectoryBuilder(Obs_11.end())
                 .back(7)
                 .build();
-        Trajectory Left_116 = drive.trajectoryBuilder(Left_115.end())
+        Trajectory Obs_116 = drive.trajectoryBuilder(Obs_115.end())
                 .strafeRight(23)
                 .build();
-        Trajectory Left_117 = drive.trajectoryBuilder(Left_116.end().plus(new Pose2d(0,0,Math.toRadians(180))))
+        Trajectory Obs_117 = drive.trajectoryBuilder(Obs_116.end().plus(new Pose2d(0,0,Math.toRadians(180))))
                 .back(70)
                 .build();
-        Trajectory Left_12 = drive.trajectoryBuilder(Left_117.end(), true)
+        Trajectory Obs_12 = drive.trajectoryBuilder(Obs_117.end(), true)
                 .splineTo(new Vector2d(29, 80), Math.toRadians(90))
                 .build();
-        Trajectory Left_13 = drive.trajectoryBuilder(Left_12.end())
+        Trajectory Obs_13 = drive.trajectoryBuilder(Obs_12.end())
                 .back (8)
                 .build();
-        Trajectory Left_14 = drive.trajectoryBuilder(Left_13.end())
+        Trajectory Obs_14 = drive.trajectoryBuilder(Obs_13.end())
                 .strafeLeft(28)
                 .build();
-        Trajectory Left_15 = drive.trajectoryBuilder(Left_14.end())
+        Trajectory Obs_15 = drive.trajectoryBuilder(Obs_14.end())
                 .back(10)
                 .build();
-        Trajectory Right_11 = drive.trajectoryBuilder(startPose)
+        Trajectory Free_11 = drive.trajectoryBuilder(startPose)
                 .splineTo(new Vector2d(variables.RightBack, -14), 0)
                 .build();
-        Trajectory Right_115 = drive.trajectoryBuilder(Right_11.end())
+        Trajectory Free_115 = drive.trajectoryBuilder(Free_11.end())
                 .strafeLeft(14)
                 .build();
-        Trajectory Right_116 = drive.trajectoryBuilder(Right_115.end())
+        Trajectory Free_116 = drive.trajectoryBuilder(Free_115.end())
                 .forward(27)
                 .build();
-        Trajectory Right_117 = drive.trajectoryBuilder(Right_116.end().plus(new Pose2d(0,0,Math.toRadians(-90))))
+        Trajectory Free_117 = drive.trajectoryBuilder(Free_116.end().plus(new Pose2d(0,0,Math.toRadians(-90))))
                 .back(70)
                 .build();
-        Trajectory Right_12 = drive.trajectoryBuilder(Right_117.end(), true)
+        Trajectory Free_12 = drive.trajectoryBuilder(Free_117.end(), true)
                 .splineTo(new Vector2d(34, 80), Math.toRadians(90))
                 .build();
-        Trajectory Right_13 = drive.trajectoryBuilder(Right_12.end())
+        Trajectory Free_13 = drive.trajectoryBuilder(Free_12.end())
                 .back (8)
                 .build();
-        Trajectory Right_14 = drive.trajectoryBuilder(Right_13.end())
+        Trajectory Free_14 = drive.trajectoryBuilder(Free_13.end())
                 .strafeLeft(16)
                 .build();
-        Trajectory Right_15 = drive.trajectoryBuilder(Right_14.end())
+        Trajectory Free_15 = drive.trajectoryBuilder(Free_14.end())
                 .back(10)
                 .build();
         Trajectory NF_01 = drive.trajectoryBuilder(startPose)
@@ -290,11 +290,11 @@ public class Auto_BlueFar extends LinearOpMode {
 
         else if ((int) cX > 0 && (int) cX < 200){
             position = variables.LEFT;
-            drive.followTrajectory(Left_11);
+            drive.followTrajectory(Obs_11);
         }
         else if ((int) cX > 400 && (int) cX < 700){
             position = variables.RIGHT;
-            drive.followTrajectory(Right_11);
+            drive.followTrajectory(Free_11);
 
 
         }
@@ -340,33 +340,33 @@ public class Auto_BlueFar extends LinearOpMode {
 
         }
         if (position == variables.RIGHT){
-            drive.followTrajectory(Right_115);
-            drive.followTrajectory(Right_116);
+            drive.followTrajectory(Free_115);
+            drive.followTrajectory(Free_116);
             drive.turn(Math.toRadians(-90));
-            drive.followTrajectory(Right_117);
-            drive.followTrajectory(Right_12);
+            drive.followTrajectory(Free_117);
+            drive.followTrajectory(Free_12);
             ArmUP();
-            drive.followTrajectory(Right_13);
+            drive.followTrajectory(Free_13);
             DropPixel(false, true);
             ArmFromBoard();
             ArmPark();
-            drive.followTrajectory(Right_14);
-            drive.followTrajectory(Right_15);
+            drive.followTrajectory(Free_14);
+            drive.followTrajectory(Free_15);
 
         }
         if (position == variables.LEFT){
-            drive.followTrajectory(Left_115);
-            drive.followTrajectory(Left_116);
+            drive.followTrajectory(Obs_115);
+            drive.followTrajectory(Obs_116);
             drive.turn(Math.toRadians(180));
-            drive.followTrajectory(Left_117);
-            drive.followTrajectory(Left_12);
+            drive.followTrajectory(Obs_117);
+            drive.followTrajectory(Obs_12);
             ArmUP();
-            drive.followTrajectory(Left_13);
+            drive.followTrajectory(Obs_13);
             DropPixel(false, true);
             ArmFromBoard();
             ArmPark();
-            drive.followTrajectory(Left_14);
-            drive.followTrajectory(Left_15);
+            drive.followTrajectory(Obs_14);
+            drive.followTrajectory(Obs_15);
 
         }
 
