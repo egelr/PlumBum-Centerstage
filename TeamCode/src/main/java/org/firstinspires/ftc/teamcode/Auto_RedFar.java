@@ -179,80 +179,80 @@ public class Auto_RedFar extends LinearOpMode {
                 .splineTo(new Vector2d(variables.Center1x, 0), 0)
                 .build();
         Trajectory Center_15 = drive.trajectoryBuilder(Center_1.end())
-                .strafeLeft(15)
+                .strafeLeft(variables.Far15Center)
                 .build();
         Trajectory Center_16 = drive.trajectoryBuilder(Center_15.end())
-                .forward(22)
+                .forward(variables.Far16Center)
                 .build();
         Trajectory Center_17 = drive.trajectoryBuilder(Center_16.end().plus(new Pose2d(0,0,Math.toRadians(90))))
-                .back(70)
+                .back(variables.FarBack)
                 .build();
         Trajectory Center_2 = drive.trajectoryBuilder(Center_17.end(),true)
-                .splineTo(new Vector2d(29, -80), Math.toRadians(-90))
+                .splineTo(new Vector2d(variables.Near2xCenter, -1*  variables.Far2y), Math.toRadians(-90))
                 .build();
         Trajectory Center_3 = drive.trajectoryBuilder(Center_2.end())
-                .back (8)
+                .back (variables.NearBoard)
                 .build();
         Trajectory Center_4 = drive.trajectoryBuilder(Center_3.end())
-                .strafeRight(23)
+                .strafeRight(variables.Park1Center)
                 .build();
         Trajectory Center_5 = drive.trajectoryBuilder(Center_4.end())
-                .back(10)
-                .build();
-        Trajectory Free_11 = drive.trajectoryBuilder(startPose)
-                .splineTo (new Vector2d(variables.Free11x, 5), Math.toRadians(-90))
-                .forward(5)
-                .build();
-        Trajectory Free_115 = drive.trajectoryBuilder(Free_11.end())
-                .back(7)
-                .build();
-        Trajectory Free_116 = drive.trajectoryBuilder(Free_115.end())
-                .strafeLeft(23)
-                .build();
-        Trajectory Free_117 = drive.trajectoryBuilder(Free_116.end().plus(new Pose2d(0,0,Math.toRadians(180))))
-                .back(70)
-                .build();
-        Trajectory Free_12 = drive.trajectoryBuilder(Free_117.end(), true)
-                .splineTo(new Vector2d(24, -80), Math.toRadians(-90))
-                .build();
-        Trajectory Free_13 = drive.trajectoryBuilder(Free_12.end())
-                .back (7)
-                .build();
-        Trajectory Free_14 = drive.trajectoryBuilder(Free_13.end())
-                .strafeRight(28)
-                .build();
-        Trajectory Free_15 = drive.trajectoryBuilder(Free_14.end())
-                .back(10)
+                .back(variables.Park2)
                 .build();
         Trajectory Obs_11 = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(variables.Obs11x, 11.5), 0)
+                .splineTo (new Vector2d(variables.Obs11x, variables.Obs11y), Math.toRadians(-90))
+                .forward(variables.Obs11Forward)
                 .build();
         Trajectory Obs_115 = drive.trajectoryBuilder(Obs_11.end())
-                .strafeRight(12)
+                .back(variables.Far115Obs)
                 .build();
         Trajectory Obs_116 = drive.trajectoryBuilder(Obs_115.end())
-                .forward(27)
+                .strafeLeft(variables.Far116Obs)
                 .build();
-        Trajectory Obs_117 = drive.trajectoryBuilder(Obs_116.end().plus(new Pose2d(0,0,Math.toRadians(90))))
-                .back(70)
+        Trajectory Obs_117 = drive.trajectoryBuilder(Obs_116.end().plus(new Pose2d(0,0,Math.toRadians(180))))
+                .back(variables.FarBack)
                 .build();
         Trajectory Obs_12 = drive.trajectoryBuilder(Obs_117.end(), true)
-                .splineTo(new Vector2d(30, -80), Math.toRadians(-90))
+                .splineTo(new Vector2d(variables.Near2xCenter, -1* variables.Far2y), Math.toRadians(-90))
                 .build();
         Trajectory Obs_13 = drive.trajectoryBuilder(Obs_12.end())
-                .back (7)
+                .back (variables.NearBoard)
                 .build();
         Trajectory Obs_14 = drive.trajectoryBuilder(Obs_13.end())
-                .strafeRight(18)
+                .strafeRight(variables.Park1Center + 4)
                 .build();
         Trajectory Obs_15 = drive.trajectoryBuilder(Obs_14.end())
-                .back(10)
+                .back(variables.Park2)
+                .build();
+        Trajectory Free_11 = drive.trajectoryBuilder(startPose)
+                .splineTo(new Vector2d(variables.Free11x, variables.Free11y), 0) //y buvo 11.5
+                .build();
+        Trajectory Free_115 = drive.trajectoryBuilder(Free_11.end())
+                .strafeRight(variables.Far115Free)
+                .build();
+        Trajectory Free_116 = drive.trajectoryBuilder(Free_115.end())
+                .forward(variables.Far116Free)
+                .build();
+        Trajectory Free_117 = drive.trajectoryBuilder(Free_116.end().plus(new Pose2d(0,0,Math.toRadians(90))))
+                .back(variables.FarBack)
+                .build();
+        Trajectory Free_12 = drive.trajectoryBuilder(Free_117.end(), true)
+                .splineTo(new Vector2d(variables.Near2xCenter + 5, -1* variables.Far2y), Math.toRadians(-90))
+                .build();
+        Trajectory Free_13 = drive.trajectoryBuilder(Free_12.end())
+                .back (variables.NearBoard)
+                .build();
+        Trajectory Free_14 = drive.trajectoryBuilder(Free_13.end())
+                .strafeRight(variables.Park1Center - 8)
+                .build();
+        Trajectory Free_15 = drive.trajectoryBuilder(Free_14.end())
+                .back(variables.Park2)
                 .build();
         Trajectory NF_01 = drive.trajectoryBuilder(startPose)
                 .forward(variables.FarNF01)
                 .build();
         Trajectory NF_02 = drive.trajectoryBuilder(NF_01.end().plus(new Pose2d(0,0,Math.toRadians(90))))
-                .back(variables.FarNF02)
+                .back(variables.FarBack)
                 .build();
         Trajectory NF_11 = drive.trajectoryBuilder(NF_02.end(), true)
                 .splineTo(new Vector2d(variables.Near2xCenter, -1* variables.Far2y), Math.toRadians(-90))
@@ -291,11 +291,11 @@ public class Auto_RedFar extends LinearOpMode {
 
         else if ((int) cX > 0 && (int) cX < 200){
             position = variables.LEFT;
-            drive.followTrajectory(Obs_11);
+            drive.followTrajectory(Free_11);
         }
         else if ((int) cX > 400 && (int) cX < 700){
             position = variables.RIGHT;
-            drive.followTrajectory(Free_11);
+            drive.followTrajectory(Obs_11);
 
         }
         else {
@@ -340,24 +340,9 @@ public class Auto_RedFar extends LinearOpMode {
 
         }
         if (position == variables.LEFT){
-            drive.followTrajectory(Obs_115);
-            drive.followTrajectory(Obs_116);
-            drive.turn(Math.toRadians(90));
-            drive.followTrajectory(Obs_117);
-            drive.followTrajectory(Obs_12);
-            ArmUP();
-            drive.followTrajectory(Obs_13);
-            DropPixel(false, true);
-            ArmFromBoard();
-            ArmPark();
-            drive.followTrajectory(Obs_14);
-            drive.followTrajectory(Obs_15);
-
-        }
-        if (position == variables.RIGHT){
             drive.followTrajectory(Free_115);
             drive.followTrajectory(Free_116);
-            drive.turn(Math.toRadians(180));
+            drive.turn(Math.toRadians(90));
             drive.followTrajectory(Free_117);
             drive.followTrajectory(Free_12);
             ArmUP();
@@ -367,6 +352,21 @@ public class Auto_RedFar extends LinearOpMode {
             ArmPark();
             drive.followTrajectory(Free_14);
             drive.followTrajectory(Free_15);
+
+        }
+        if (position == variables.RIGHT){
+            drive.followTrajectory(Obs_115);
+            drive.followTrajectory(Obs_116);
+            drive.turn(Math.toRadians(180));
+            drive.followTrajectory(Obs_117);
+            drive.followTrajectory(Obs_12);
+            ArmUP();
+            drive.followTrajectory(Obs_13);
+            DropPixel(false, true);
+            ArmFromBoard();
+            ArmPark();
+            drive.followTrajectory(Obs_14);
+            drive.followTrajectory(Obs_15);
 
 
         }

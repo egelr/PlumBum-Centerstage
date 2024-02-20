@@ -39,29 +39,27 @@ public class variables {
     //Auto trajectory when the prop is in the center
     public static final double Center1x = 30;
     public static final double Center1y = 0;
+    public static final double Near2xCenter = 29;
+    public static final double Far15Center = 15;
+    public static final double Far16Center = 22;
     //Auto trajectory when the prop is in the left (for RedNear and BlueFar) and in the right (for RedFar and BlueNear)
     public static final double Obs11x = 30;
     public static final double Obs11y = 5;
     public static final double Obs11Forward = 5;
-    public static final double LeftLeft = 12;
-    public static final double LeftForward = 8;
-    //Auto trajectory when the prop is in the right (for RedNear and BlueFar) and in the left (for RedFar and BlueNear)
     public static final double Free11x = 23;
     public static final double Free11y = 11;
+    public static final double Far115Obs = 7;
+    public static final double Far116Obs = 23;
+    public static final double Far115Free = 14;
+    public static final double Far116Free = 27;
+    public static final double FarNF01 = 50;
+    public static final double FarBack = 70;
     public static final double Near2y = 32;
     public static final double Far2y = 80;
-    //Auto trajectory when the prop is not found (Near)
-    public static final double Near2xCenter = 29;
+    //Auto Parking trajectories
     public static final double NearBoard = 8;
     public static final double Park1Center = 24;
     public static final double Park2 = 10;
-    public static final double FarNF01 = 50;
-    public static final double FarNF02 = 70;
-    //Auto trajectory when the prop is not found (Far)
-    public static final double NFBackFar = 65;
-    public static final double NFForwardFar = 100;
-    public static final double NFBackFar1 = 60;
-    public static final double RightLeft1 = 22;
 
 
 
