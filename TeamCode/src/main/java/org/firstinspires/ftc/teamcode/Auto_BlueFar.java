@@ -175,7 +175,7 @@ public class Auto_BlueFar extends LinearOpMode {
         drive.setPoseEstimate(startPose);
 
         Trajectory Center_1 = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(variables.CenterBack, 0), 0)
+                .splineTo(new Vector2d(variables.Center1x, 0), 0)
                 .build();
         Trajectory Center_15 = drive.trajectoryBuilder(Center_1.end())
                 .strafeRight(15)
@@ -224,7 +224,7 @@ public class Auto_BlueFar extends LinearOpMode {
                 .back(10)
                 .build();
         Trajectory Free_11 = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(variables.RightBack, -14), 0)
+                .splineTo(new Vector2d(variables.Free11x, -14), 0)
                 .build();
         Trajectory Free_115 = drive.trajectoryBuilder(Free_11.end())
                 .strafeLeft(14)
@@ -248,22 +248,22 @@ public class Auto_BlueFar extends LinearOpMode {
                 .back(10)
                 .build();
         Trajectory NF_01 = drive.trajectoryBuilder(startPose)
-                .forward(50)
+                .forward(variables.FarNF01)
                 .build();
         Trajectory NF_02 = drive.trajectoryBuilder(NF_01.end().plus(new Pose2d(0,0,Math.toRadians(-90))))
-                .back(70)
+                .back(variables.FarNF02)
                 .build();
         Trajectory NF_11 = drive.trajectoryBuilder(NF_02.end(),true)
-                .splineTo(new Vector2d(29, 80), Math.toRadians(90))
+                .splineTo(new Vector2d(variables.Near2xCenter, variables.Far2y), Math.toRadians(90))
                 .build();
         Trajectory NF_12 = drive.trajectoryBuilder(NF_11.end())
-                .back (8)
+                .back (variables.NearBoard)
                 .build();
         Trajectory NF_13 = drive.trajectoryBuilder(NF_12.end())
-                .strafeLeft(23)
+                .strafeLeft(variables.Park1Center)
                 .build();
         Trajectory NF_14 = drive.trajectoryBuilder(NF_13.end())
-                .back(10)
+                .back(variables.Park2)
                 .build();
 
         initOpenCV();

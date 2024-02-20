@@ -44,7 +44,10 @@ public class Auto_BlueNear extends LinearOpMode {
     public static final double focalLength = 728;  // Replace with the focal length of the camera in pixels
    public ElapsedTime timer;
    public Motor m_motor;
-   public int pos;
+   public Motor m_motor_2;
+
+    public int pos;
+    public int pos2;
     private void initOpenCV() {
 
         // Create an instance of the camera
@@ -168,68 +171,76 @@ public class Auto_BlueNear extends LinearOpMode {
         pos = m_motor.getCurrentPosition();
         m_motor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         m_motor.setPositionTolerance(100);
+        m_motor_2 = new Motor(hardwareMap, "armSlideMotor", 1425.2, 117);
+        m_motor_2.setRunMode(Motor.RunMode.PositionControl);
+        m_motor_2.setPositionCoefficient(0.05);
+        pos2 = m_motor_2.getCurrentPosition();
+        m_motor_2.setInverted(true);
+        m_motor_2.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        m_motor_2.setPositionTolerance(50);
+
         Pose2d startPose = new Pose2d(0, 0);
         timer = new ElapsedTime();
 
         drive.setPoseEstimate(startPose);
 
         Trajectory Center_1 = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(variables.CenterBack, 0), 0)
+                .splineTo(new Vector2d(variables.Center1x, variables.Center1y), 0)
                 .build();
         Trajectory Center_2 = drive.trajectoryBuilder(Center_1.end(),true)
-                .splineTo(new Vector2d(29, 34), Math.toRadians(90))
+                .splineTo(new Vector2d(variables.Near2xCenter, variables.Near2y), Math.toRadians(90))
                 .build();
         Trajectory Center_3 = drive.trajectoryBuilder(Center_2.end())
-                .back (8)
+                .back (variables.NearBoard)
                 .build();
         Trajectory Center_4 = drive.trajectoryBuilder(Center_3.end())
-                .strafeRight(23)
+                .strafeRight(variables.Park1Center)
                 .build();
         Trajectory Center_5 = drive.trajectoryBuilder(Center_4.end())
-                .back(10)
-                .build();
-        Trajectory Free_11 = drive.trajectoryBuilder(startPose)
-                .splineTo (new Vector2d(variables.LeftBack, 5), Math.toRadians(-90))
-                .forward(5)
-                .build();
-        Trajectory Free_12 = drive.trajectoryBuilder(Free_11.end(), true)
-                .splineTo(new Vector2d(34, 34), Math.toRadians(90))
-                .build();
-        Trajectory Free_13 = drive.trajectoryBuilder(Free_12.end())
-                .back (8)
-                .build();
-        Trajectory Free_14 = drive.trajectoryBuilder(Free_13.end())
-                .strafeRight(28)
-                .build();
-        Trajectory Free_15 = drive.trajectoryBuilder(Free_14.end())
-                .back(10)
+                .back(variables.Park2)
                 .build();
         Trajectory Obs_11 = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(variables.RightBack, 12), 0)
+                .splineTo (new Vector2d(variables.Obs11x, variables.Obs11y), Math.toRadians(-90))
+                .forward(variables.Obs11Forward)
                 .build();
         Trajectory Obs_12 = drive.trajectoryBuilder(Obs_11.end(), true)
-                .splineTo(new Vector2d(24, 34), Math.toRadians(90))
+                .splineTo(new Vector2d(variables.Near2xCenter + 6 , variables.Near2y), Math.toRadians(90))
                 .build();
         Trajectory Obs_13 = drive.trajectoryBuilder(Obs_12.end())
-                .back (8)
+                .back (variables.NearBoard)
                 .build();
         Trajectory Obs_14 = drive.trajectoryBuilder(Obs_13.end())
-                .strafeRight(18)
+                .strafeRight(variables.Park1Center + 6)
                 .build();
         Trajectory Obs_15 = drive.trajectoryBuilder(Obs_14.end())
-                .back(10)
+                .back(variables.Park2)
+                .build();
+        Trajectory Free_11 = drive.trajectoryBuilder(startPose)
+                .splineTo(new Vector2d(variables.Free11x, variables.Free11y), 0)
+                .build();
+        Trajectory Free_12 = drive.trajectoryBuilder(Free_11.end(), true)
+                .splineTo(new Vector2d(variables.Near2xCenter - 6, variables.Near2y), Math.toRadians(90))
+                .build();
+        Trajectory Free_13 = drive.trajectoryBuilder(Free_12.end())
+                .back (variables.NearBoard)
+                .build();
+        Trajectory Free_14 = drive.trajectoryBuilder(Free_13.end())
+                .strafeRight(variables.Park1Center - 6)
+                .build();
+        Trajectory Free_15 = drive.trajectoryBuilder(Free_14.end())
+                .back(variables.Park2)
                 .build();
         Trajectory NF_11 = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(29, 30), Math.toRadians(270))
+                .splineTo(new Vector2d(variables.Near2xCenter, variables.Near2y), Math.toRadians(270))
                 .build();
         Trajectory NF_12 = drive.trajectoryBuilder(NF_11.end())
-                .back (12)
+                .back (variables.NearBoard)
                 .build();
         Trajectory NF_13 = drive.trajectoryBuilder(NF_12.end())
-                .strafeRight(23)
+                .strafeRight(variables.Park1Center)
                 .build();
         Trajectory NF_14 = drive.trajectoryBuilder(NF_13.end())
-                .back(10)
+                .back(variables.Park2)
                 .build();
 
         initOpenCV();
@@ -256,11 +267,11 @@ public class Auto_BlueNear extends LinearOpMode {
 
         else if ((int) cX > 0 && (int) cX < 200){
             position = variables.LEFT;
-            drive.followTrajectory(Obs_11);
+            drive.followTrajectory(Free_11);
         }
         else if ((int) cX > 400 && (int) cX < 700){
             position = variables.RIGHT;
-            drive.followTrajectory(Free_11);
+            drive.followTrajectory(Obs_11);
 
         }
         else {
@@ -298,17 +309,6 @@ public class Auto_BlueNear extends LinearOpMode {
 
         }
         if (position == variables.LEFT){
-            drive.followTrajectory(Obs_12);
-            ArmUP();
-            drive.followTrajectory(Obs_13);
-            DropPixel(false, true);
-            ArmFromBoard();
-            ArmPark();
-            drive.followTrajectory(Obs_14);
-            drive.followTrajectory(Obs_15);
-
-        }
-        if (position == variables.RIGHT){
             drive.followTrajectory(Free_12);
             ArmUP();
             drive.followTrajectory(Free_13);
@@ -317,6 +317,17 @@ public class Auto_BlueNear extends LinearOpMode {
             ArmPark();
             drive.followTrajectory(Free_14);
             drive.followTrajectory(Free_15);
+
+        }
+        if (position == variables.RIGHT){
+            drive.followTrajectory(Obs_12);
+            ArmUP();
+            drive.followTrajectory(Obs_13);
+            DropPixel(false, true);
+            ArmFromBoard();
+            ArmPark();
+            drive.followTrajectory(Obs_14);
+            drive.followTrajectory(Obs_15);
 
         }
 
@@ -336,6 +347,10 @@ void ClawDown()
 }
 void DropPixel(boolean Purple, boolean Yellow)
 {
+    timer.reset();
+    while (timer.seconds() < 0.5 ) {
+    }
+
     if (Purple) clawLeftServo.turnToAngle(variables.gripDegrees1);
     if (Yellow) clawRightServo.turnToAngle(variables.gripDegrees);
     timer.reset();
@@ -362,7 +377,14 @@ void ArmUP()
 }
     void ArmFromBoard()
     {
-        clawAngleServo.turnToAngle(variables.ClawAngleDeposit);
+        timer.reset();
+        while (timer.seconds() < 0.2 ) {
+        }
+        clawAngleServo.turnToAngle(variables.ClawAngleDeposit-10);
+        timer.reset();
+        while (timer.seconds() < 0.2 ) {
+        }
+
         m_motor.setTargetPosition(pos - variables.nearBoard+200);
         timer.reset();
         while (!m_motor.atTargetPosition() && timer.seconds() < variables.timer_motor ){
@@ -380,4 +402,27 @@ void ArmPark(){
     m_motor.stopMotor();
 
 }
+   /* void ArmUP_Front()
+    {
+        clawAngleServo.turnToAngle(15);
+        m_motor.setTargetPosition(pos - 600);
+        timer.reset();
+        while (!m_motor.atTargetPosition() && timer.seconds() < variables.timer_motor ){
+            m_motor.set(variables.speed_arm*2);
+        }
+        m_motor_2.setTargetPosition(pos2+100);
+
+        timer.reset();
+        while (!m_motor_2.atTargetPosition() && timer.seconds() < variables.timer_motor_2) {
+            m_motor_2.set(variables.speed_extender);
+        }
+        timer.reset();
+        while (timer.seconds() < 10 ) {
+        }
+        m_motor.stopMotor();
+
+        m_motor_2.stopMotor();
+
+    }
+*/
 }
