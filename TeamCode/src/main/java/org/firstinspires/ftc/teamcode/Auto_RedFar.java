@@ -237,7 +237,7 @@ public class Auto_RedFar extends LinearOpMode {
                 .back(variables.FarBack)
                 .build();
         Trajectory Free_12 = drive.trajectoryBuilder(Free_117.end(), true)
-                .splineTo(new Vector2d(variables.Near2xCenter + 5, -1* variables.Far2y), Math.toRadians(-90))
+                .splineTo(new Vector2d(variables.Near2xCenter + 3, -1* variables.Far2y), Math.toRadians(-90))
                 .build();
         Trajectory Free_13 = drive.trajectoryBuilder(Free_12.end())
                 .back (variables.NearBoard)
@@ -378,57 +378,71 @@ public class Auto_RedFar extends LinearOpMode {
 
 
 
-    void ClawDown()
-    {
+
+    void ClawDown() {
         clawAngleServo.turnToAngle(variables.AutoCLawDown);
     /*timer.reset();
     while (timer.seconds() < 1);
 */
     }
-    void DropPixel(boolean Purple, boolean Yellow)
-    {
+
+    void DropPixel(boolean Purple, boolean Yellow) {
+        timer.reset();
+        while (timer.seconds() < 0.5) {
+        }
+
         if (Purple) clawLeftServo.turnToAngle(variables.gripDegrees1);
         if (Yellow) clawRightServo.turnToAngle(variables.gripDegrees);
         timer.reset();
         while (timer.seconds() < 0.2) ;
 
     }
-    void ClawPark()
-    {
+
+    void ClawPark() {
 
         clawLeftServo.turnToAngle(variables.gripDegrees);
         clawRightServo.turnToAngle(variables.gripDegrees1);
         clawAngleServo.turnToAngle(variables.AutoCLawPark);
 
     }
-    void ArmUP()
-    {
+
+    void ArmUP() {
         clawAngleServo.turnToAngle(variables.ClawAngleDeposit);
         m_motor.setTargetPosition(pos - variables.nearBoard);
         timer.reset();
-        while (!m_motor.atTargetPosition() && timer.seconds() < variables.timer_motor ){
+        while (!m_motor.atTargetPosition() && timer.seconds() < variables.timer_motor) {
             m_motor.set(variables.speed_arm);
         }
         m_motor.stopMotor();
     }
-    void ArmFromBoard()
-    {
-        clawAngleServo.turnToAngle(variables.ClawAngleDeposit);
-        m_motor.setTargetPosition(pos - variables.nearBoard+200);
+
+    void ArmFromBoard() {
         timer.reset();
-        while (!m_motor.atTargetPosition() && timer.seconds() < variables.timer_motor ){
+        while (timer.seconds() < 0.2) {
+        }
+        clawAngleServo.turnToAngle(variables.ClawAngleDeposit - 10);
+        timer.reset();
+        while (timer.seconds() < 0.2) {
+        }
+
+        m_motor.setTargetPosition(pos - variables.nearBoard + 200);
+        timer.reset();
+        while (!m_motor.atTargetPosition() && timer.seconds() < variables.timer_motor) {
             m_motor.set(variables.speed_arm);
         }
         m_motor.stopMotor();
     }
-    void ArmPark(){
+
+    void ArmPark() {
         ClawPark();
         m_motor.setTargetPosition(pos);
         timer.reset();
-        while (!m_motor.atTargetPosition() && timer.seconds() < variables.timer_motor ){
+        while (!m_motor.atTargetPosition() && timer.seconds() < variables.timer_motor) {
             m_motor.set(variables.speed_arm);
         }
         m_motor.stopMotor();
 
     }
+
+
 }

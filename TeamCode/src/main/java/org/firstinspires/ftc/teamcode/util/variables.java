@@ -50,10 +50,10 @@ public class variables {
     public static final double Free11y = 11;
     public static final double Far115Obs = 7;
     public static final double Far116Obs = 23;
-    public static final double Far115Free = 14;
+    public static final double Far115Free = 13;
     public static final double Far116Free = 27;
     public static final double FarNF01 = 50;
-    public static final double FarBack = 70;
+    public static final double FarBack = 61;
     public static final double Near2y = 32;
     public static final double Far2y = 80;
     //Auto Parking trajectories
