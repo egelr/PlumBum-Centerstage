@@ -19,6 +19,7 @@ public class TeleOP extends LinearOpMode {
     SimpleServo clawAngleServo;
     SimpleServo clawRightServo;
     SimpleServo clawLeftServo;
+    SimpleServo DroneServo;
     //Drivetrain Motors speed origin
     public double drive_speed = 0.85;
     //Arm Motors speed
@@ -81,6 +82,10 @@ public class TeleOP extends LinearOpMode {
 
         clawLeftServo = new SimpleServo(
                 hardwareMap, "clawLeftServo", 10, 120,
+                AngleUnit.DEGREES
+        );
+        DroneServo = new SimpleServo(
+                hardwareMap, "DroneServo", 0, 360,
                 AngleUnit.DEGREES
         );
         //Defining CLaw positions
@@ -236,6 +241,16 @@ public class TeleOP extends LinearOpMode {
                 clawLeftServo.turnToAngle(variables.gripDegrees);
                 telemetry.addData("Hardware: ", clawRightServo.getAngle());
                 telemetry.addData("Hardware: ", clawLeftServo.getAngle());
+                telemetry.update();
+            }
+            if (gamepad1.guide) {
+                DroneServo.setPosition(1);
+                timer.reset();
+                while (timer.seconds() < 3) {
+                }
+                DroneServo.setPosition(0);
+                telemetry.addData("Hardware: ", DroneServo.getAngle());
+                telemetry.addData("Hardware: ", DroneServo.getAngle());
                 telemetry.update();
             }
 
