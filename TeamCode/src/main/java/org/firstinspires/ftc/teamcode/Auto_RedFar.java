@@ -210,10 +210,10 @@ public class Auto_RedFar extends LinearOpMode {
                 .strafeLeft(variables.Far116Obs)
                 .build();
         Trajectory Obs_117 = drive.trajectoryBuilder(Obs_116.end().plus(new Pose2d(0,0,Math.toRadians(180))))
-                .back(variables.FarBack)
+                .back(variables.FarBack + 7)
                 .build();
         Trajectory Obs_12 = drive.trajectoryBuilder(Obs_117.end(), true)
-                .splineTo(new Vector2d(variables.Near2xCenter, -1* variables.Far2y), Math.toRadians(-90))
+                .splineTo(new Vector2d(variables.Near2xCenter - 5, -1* variables.Far2y), Math.toRadians(-90))
                 .build();
         Trajectory Obs_13 = drive.trajectoryBuilder(Obs_12.end())
                 .back (variables.NearBoard)

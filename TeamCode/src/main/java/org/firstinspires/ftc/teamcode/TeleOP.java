@@ -35,6 +35,7 @@ public class TeleOP extends LinearOpMode {
     private Motor fL, fR, bL, bR;
     boolean dpadLeftPressed = false;
     int arm_extended = 0;
+    private Motor LeftLiftMotor, RightLiftMotor;
     @Override
     public void runOpMode() throws InterruptedException {
         //Creating the Drivetrain Motors
@@ -68,6 +69,13 @@ public class TeleOP extends LinearOpMode {
         m_motor_2.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         m_motor.setPositionTolerance(100);
         m_motor_2.setPositionTolerance(50);
+        Motor LeftLiftMotor = new Motor(hardwareMap, "LeftLiftMotor");
+        Motor RightLiftMotor = new Motor(hardwareMap, "RightLiftMotor");
+        LeftLiftMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        RightLiftMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        RightLiftMotor.setRunMode(Motor.RunMode.RawPower);
+        LeftLiftMotor.setRunMode(Motor.RunMode.RawPower);
+        RightLiftMotor.setInverted(true);
 
         //Creating the Claw Servos
         clawAngleServo = new SimpleServo(
@@ -121,7 +129,9 @@ public class TeleOP extends LinearOpMode {
                 drive_speed = 0.85;
             }
             //PARK (Robot starting/basic compact Position)
-            if (gamepad1.triangle) {
+            if ( gamepad1.left_trigger < 0.5 && gamepad1.triangle) {
+                clawRightServo.turnToAngle(variables.gripDegrees1);
+                clawLeftServo.turnToAngle(variables.gripDegrees);
                 m_motor.setTargetPosition(pos);
                 clawAngleServo.turnToAngle(clawDegreesPark);
                 timer.reset();
@@ -165,7 +175,7 @@ public class TeleOP extends LinearOpMode {
             }
 
             //DASHBOARD LOW (Lower Backboard pixel depositing Position)
-            if (gamepad1.cross) {
+            if ( gamepad1.left_trigger < 0.5 && gamepad1.cross) {
                 clawAngleServo.turnToAngle(clawDegreesBoard);
                 m_motor.setTargetPosition(pos - variables.nearBoard);
                 timer.reset();
@@ -205,6 +215,34 @@ public class TeleOP extends LinearOpMode {
                 telemetry.addData("Status: ", "Dashboard high");
                 telemetry.update();
             }
+            if (gamepad1.right_bumper)
+            {
+                LeftLiftMotor.set(1);
+                RightLiftMotor.set(1);
+            }
+            if (gamepad1.left_bumper)
+            {
+                LeftLiftMotor.set(-1);
+                RightLiftMotor.set(-1);
+            }
+            if (gamepad1.left_trigger > 0.5 && gamepad1.dpad_up)
+            {
+                LeftLiftMotor.set(-0.5);
+            }
+            if (gamepad1.left_trigger > 0.5 && gamepad1.dpad_down)
+            {
+                LeftLiftMotor.set(0.5);
+            }
+            if (gamepad1.left_trigger > 0.5 && gamepad1.triangle)
+            {
+                RightLiftMotor.set(-0.5);
+            }
+            if (gamepad1.left_trigger > 0.5 && gamepad1.cross)
+            {
+                RightLiftMotor.set(0.5);
+            }
+            LeftLiftMotor.set(0);
+            RightLiftMotor.set(0);
             //RECOVERY OUT (Recovery mode for extending the Arm)
             if (gamepad1.share) {
                 pos2 = pos2 + 50;
@@ -236,7 +274,7 @@ public class TeleOP extends LinearOpMode {
 
 
             //Closed Claw Position
-            if (gamepad1.dpad_up) {
+            if ( gamepad1.left_trigger < 0.5 && gamepad1.dpad_up) {
                 clawRightServo.turnToAngle(variables.gripDegrees1);
                 clawLeftServo.turnToAngle(variables.gripDegrees);
                 telemetry.addData("Hardware: ", clawRightServo.getAngle());
@@ -246,16 +284,16 @@ public class TeleOP extends LinearOpMode {
             if (gamepad1.guide) {
                 DroneServo.setPosition(1);
                 timer.reset();
-                while (timer.seconds() < 3) {
+                while (timer.seconds() < 1) {
                 }
-                DroneServo.setPosition(0);
+                DroneServo.setPosition(0.5);
                 telemetry.addData("Hardware: ", DroneServo.getAngle());
                 telemetry.addData("Hardware: ", DroneServo.getAngle());
                 telemetry.update();
             }
 
             //Opened Claw Position
-            if (gamepad1.dpad_down) {
+            if ( gamepad1.left_trigger < 0.5 && gamepad1.dpad_down) {
                 clawRightServo.turnToAngle(variables.gripDegrees);
                 clawLeftServo.turnToAngle(variables.gripDegrees1);
                 telemetry.addData("Hardware: ", clawRightServo.getAngle());

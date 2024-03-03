@@ -41,7 +41,7 @@ public class variables {
     public static final double Center1y = 0;
     public static final double Near2xCenter = 29;
     public static final double Far15Center = 15;
-    public static final double Far16Center = 22;
+    public static final double Far16Center = 24;
     //Auto trajectory when the prop is in the left (for RedNear and BlueFar) and in the right (for RedFar and BlueNear)
     public static final double Obs11x = 30;
     public static final double Obs11y = 5;
