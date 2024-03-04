@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode;
-
+//A class for checking lift positions and fixing them
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;

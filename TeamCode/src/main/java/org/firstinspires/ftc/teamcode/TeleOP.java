@@ -69,13 +69,13 @@ public class TeleOP extends LinearOpMode {
         m_motor_2.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         m_motor.setPositionTolerance(100);
         m_motor_2.setPositionTolerance(50);
-        Motor LeftLiftMotor = new Motor(hardwareMap, "LeftLiftMotor");
-        Motor RightLiftMotor = new Motor(hardwareMap, "RightLiftMotor");
-        LeftLiftMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        RightLiftMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        LeftLiftMotor = new Motor(hardwareMap, "LeftLiftMotor");
+        RightLiftMotor = new Motor(hardwareMap, "RightLiftMotor");
         RightLiftMotor.setRunMode(Motor.RunMode.RawPower);
         LeftLiftMotor.setRunMode(Motor.RunMode.RawPower);
         RightLiftMotor.setInverted(true);
+        LeftLiftMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        RightLiftMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
         //Creating the Claw Servos
         clawAngleServo = new SimpleServo(
@@ -215,6 +215,7 @@ public class TeleOP extends LinearOpMode {
                 telemetry.addData("Status: ", "Dashboard high");
                 telemetry.update();
             }
+            //Robot's hanging mechanism controls both
             if (gamepad1.right_bumper)
             {
                 LeftLiftMotor.set(1);
@@ -225,24 +226,25 @@ public class TeleOP extends LinearOpMode {
                 LeftLiftMotor.set(-1);
                 RightLiftMotor.set(-1);
             }
+            //for fixing
             if (gamepad1.left_trigger > 0.5 && gamepad1.dpad_up)
             {
-                LeftLiftMotor.set(-0.5);
+                LeftLiftMotor.set(-1);
             }
             if (gamepad1.left_trigger > 0.5 && gamepad1.dpad_down)
             {
-                LeftLiftMotor.set(0.5);
+                LeftLiftMotor.set(1);
             }
             if (gamepad1.left_trigger > 0.5 && gamepad1.triangle)
             {
-                RightLiftMotor.set(-0.5);
+                RightLiftMotor.set(-1);
             }
             if (gamepad1.left_trigger > 0.5 && gamepad1.cross)
             {
-                RightLiftMotor.set(0.5);
+                RightLiftMotor.set(1);
             }
-            LeftLiftMotor.set(0);
-            RightLiftMotor.set(0);
+            LeftLiftMotor.stopMotor();
+            RightLiftMotor.stopMotor();
             //RECOVERY OUT (Recovery mode for extending the Arm)
             if (gamepad1.share) {
                 pos2 = pos2 + 50;
@@ -281,6 +283,7 @@ public class TeleOP extends LinearOpMode {
                 telemetry.addData("Hardware: ", clawLeftServo.getAngle());
                 telemetry.update();
             }
+            //drone launcher
             if (gamepad1.guide) {
                 DroneServo.setPosition(1);
                 timer.reset();
