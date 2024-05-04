@@ -204,7 +204,7 @@ public class Auto_BlueNear extends LinearOpMode {
                 .forward(variables.Obs11Forward)
                 .build();
         Trajectory Obs_12 = drive.trajectoryBuilder(Obs_11.end(), true)
-                .splineTo(new Vector2d(variables.Near2xCenter + 6 , variables.Near2y), Math.toRadians(90))
+                .splineTo(new Vector2d(variables.Near2xCenter + 7 , variables.Near2y), Math.toRadians(90))
                 .build();
         Trajectory Obs_13 = drive.trajectoryBuilder(Obs_12.end())
                 .back (variables.NearBoard)
@@ -216,10 +216,10 @@ public class Auto_BlueNear extends LinearOpMode {
                 .back(variables.Park2)
                 .build();
         Trajectory Free_11 = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(variables.Free11x, variables.Free11y), 0)
+                .splineTo(new Vector2d(variables.Free11x-2, variables.Free11y), 0)
                 .build();
         Trajectory Free_12 = drive.trajectoryBuilder(Free_11.end(), true)
-                .splineTo(new Vector2d(variables.Near2xCenter - 6, variables.Near2y), Math.toRadians(90))
+                .splineTo(new Vector2d(variables.Near2xCenter - 7, variables.Near2y), Math.toRadians(90))
                 .build();
         Trajectory Free_13 = drive.trajectoryBuilder(Free_12.end())
                 .back (variables.NearBoard)

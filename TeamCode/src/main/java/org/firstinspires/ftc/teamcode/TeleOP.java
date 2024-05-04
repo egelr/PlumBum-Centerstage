@@ -71,6 +71,16 @@ public class TeleOP extends LinearOpMode {
         m_motor_2.setPositionTolerance(50);
         LeftLiftMotor = new Motor(hardwareMap, "LeftLiftMotor");
         RightLiftMotor = new Motor(hardwareMap, "RightLiftMotor");
+  /*      LeftLiftMotor.resetEncoder();
+        RightLiftMotor.resetEncoder();
+        int LeftLiftPos = LeftLiftMotor.getCurrentPosition();
+        int RightLiftPos = RightLiftMotor.getCurrentPosition();
+
+        LeftLiftMotor.setPositionCoefficient(0.05);
+        RightLiftMotor.setPositionCoefficient(0.05);
+        LeftLiftMotor.setPositionTolerance(50);
+        RightLiftMotor.setPositionTolerance(50);
+    */
         RightLiftMotor.setRunMode(Motor.RunMode.RawPower);
         LeftLiftMotor.setRunMode(Motor.RunMode.RawPower);
         RightLiftMotor.setInverted(true);
@@ -109,6 +119,7 @@ public class TeleOP extends LinearOpMode {
         telemetry.update();
         //clawAngleServo.setInverted(true);
         ElapsedTime timer = new ElapsedTime();
+
         waitForStart();
 
 
@@ -225,7 +236,23 @@ public class TeleOP extends LinearOpMode {
             {
                 LeftLiftMotor.set(-1);
                 RightLiftMotor.set(-1);
+/*            LeftLiftMotor.setRunMode(Motor.RunMode.PositionControl);
+            RightLiftMotor.setRunMode(Motor.RunMode.PositionControl);
+            LeftLiftMotor.setTargetPosition(LeftLiftPos-3360);
+            RightLiftMotor.setTargetPosition(RightLiftPos-3360);
+
+            timer.reset();
+            while ((!LeftLiftMotor.atTargetPosition() || !RightLiftMotor.atTargetPosition()) && timer.seconds() < 4 ){
+                LeftLiftMotor.set(1);
+                RightLiftMotor.set(1);
             }
+            LeftLiftMotor.stopMotor();
+            RightLiftMotor.stopMotor();
+            LeftLiftMotor.setRunMode(Motor.RunMode.RawPower);
+            RightLiftMotor.setRunMode(Motor.RunMode.RawPower);
+*/
+            }
+
             //for fixing
             if (gamepad1.left_trigger > 0.5 && gamepad1.dpad_up)
             {

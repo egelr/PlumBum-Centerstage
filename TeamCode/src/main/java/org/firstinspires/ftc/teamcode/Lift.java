@@ -17,6 +17,8 @@ public class Lift extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Motor LeftLiftMotor = new Motor(hardwareMap, "LeftLiftMotor");
         Motor RightLiftMotor = new Motor(hardwareMap, "RightLiftMotor");
+        LeftLiftMotor.resetEncoder();
+        RightLiftMotor.resetEncoder();
         LeftLiftMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         RightLiftMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         RightLiftMotor.setRunMode(Motor.RunMode.RawPower);
@@ -28,6 +30,9 @@ public class Lift extends LinearOpMode {
 
         while (!isStopRequested())
         {
+            telemetry.addData("left: ", LeftLiftMotor.getCurrentPosition());
+            telemetry.addData("right: ", RightLiftMotor.getCurrentPosition());
+            telemetry.update();
             if (gamepad1.right_bumper)
             {
                 LeftLiftMotor.set(1);

@@ -214,7 +214,7 @@ public class Auto_BlueFar extends LinearOpMode {
                 .back(variables.FarBack + 7)
                 .build();
         Trajectory Obs_12 = drive.trajectoryBuilder(Obs_117.end(), true)
-                .splineTo(new Vector2d(variables.Near2xCenter, variables.Far2y), Math.toRadians(90)) //cia x kazkodel 29 kaip centre buvo?
+                .splineTo(new Vector2d(variables.Near2xCenter - 1, variables.Far2y), Math.toRadians(90)) //cia x kazkodel 29 kaip centre buvo?
                 .build();
         Trajectory Obs_13 = drive.trajectoryBuilder(Obs_12.end())
                 .back(variables.NearBoard )
@@ -226,7 +226,7 @@ public class Auto_BlueFar extends LinearOpMode {
                 .back(variables.Park2)
                 .build();
         Trajectory Free_11 = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(variables.Free11x , (-1 * variables.Free11y) -2), 0)
+                .splineTo(new Vector2d(variables.Free11x , (-1 * variables.Free11y) -3), 0)
                 .build();
         Trajectory Free_115 = drive.trajectoryBuilder(Free_11.end())
                 .strafeLeft(variables.Far115Free)
@@ -238,7 +238,7 @@ public class Auto_BlueFar extends LinearOpMode {
                 .back(variables.FarBack)
                 .build();
         Trajectory Free_12 = drive.trajectoryBuilder(Free_117.end(), true)
-                .splineTo(new Vector2d(variables.Near2xCenter + 4, variables.Far2y), Math.toRadians(90))
+                .splineTo(new Vector2d(variables.Near2xCenter + 2, variables.Far2y), Math.toRadians(90))
                 .build();
         Trajectory Free_13 = drive.trajectoryBuilder(Free_12.end())
                 .back(variables.NearBoard)
@@ -282,7 +282,7 @@ public class Auto_BlueFar extends LinearOpMode {
         clawLeftServo.turnToAngle(variables.gripDegrees);
         clawAngleServo.turnToAngle(variables.AutoCLawDown);
         timer.reset();
-        while (timer.seconds() < 1) ;
+        while (timer.seconds() < 6) ;
 
 
         if ((int) cX > 200 && (int) cX < 400) {

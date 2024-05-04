@@ -185,7 +185,7 @@ public class Auto_RedFar extends LinearOpMode {
                 .forward(variables.Far16Center)
                 .build();
         Trajectory Center_17 = drive.trajectoryBuilder(Center_16.end().plus(new Pose2d(0,0,Math.toRadians(90))))
-                .back(variables.FarBack)
+                .back(variables.FarBack+5)
                 .build();
         Trajectory Center_2 = drive.trajectoryBuilder(Center_17.end(),true)
                 .splineTo(new Vector2d(variables.Near2xCenter, -1*  variables.Far2y), Math.toRadians(-90))
@@ -225,7 +225,7 @@ public class Auto_RedFar extends LinearOpMode {
                 .back(variables.Park2)
                 .build();
         Trajectory Free_11 = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(variables.Free11x, variables.Free11y), 0) //y buvo 11.5
+                .splineTo(new Vector2d(variables.Free11x-1, variables.Free11y), 0) //y buvo 11.5
                 .build();
         Trajectory Free_115 = drive.trajectoryBuilder(Free_11.end())
                 .strafeRight(variables.Far115Free)
@@ -281,7 +281,7 @@ public class Auto_RedFar extends LinearOpMode {
         clawLeftServo.turnToAngle(variables.gripDegrees);
         clawAngleServo.turnToAngle(variables.AutoCLawDown);
         timer.reset();
-        while (timer.seconds() < 1);
+        while (timer.seconds() < 6);
 
 
         if ((int) cX > 200 && (int) cX < 400){
