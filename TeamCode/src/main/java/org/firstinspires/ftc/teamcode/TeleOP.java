@@ -137,7 +137,7 @@ public class TeleOP extends LinearOpMode {
             if (gamepad1.right_trigger > 0.5) {
                 drive_speed = 0.35;
             } else {
-                drive_speed = 0.85;
+                drive_speed = 1;
             }
             //PARK (Robot starting/basic compact Position)
             if ( gamepad1.left_trigger < 0.5 && gamepad1.triangle) {

@@ -204,7 +204,7 @@ public class Auto_BlueNear extends LinearOpMode {
                 .forward(variables.Obs11Forward)
                 .build();
         Trajectory Obs_12 = drive.trajectoryBuilder(Obs_11.end(), true)
-                .splineTo(new Vector2d(variables.Near2xCenter + 7 , variables.Near2y), Math.toRadians(90))
+                .splineTo(new Vector2d(variables.Near2xCenter + 6 , variables.Near2y), Math.toRadians(90))
                 .build();
         Trajectory Obs_13 = drive.trajectoryBuilder(Obs_12.end())
                 .back (variables.NearBoard)
@@ -216,10 +216,10 @@ public class Auto_BlueNear extends LinearOpMode {
                 .back(variables.Park2)
                 .build();
         Trajectory Free_11 = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(variables.Free11x-2, variables.Free11y), 0)
+                .splineTo(new Vector2d(variables.Free11x, variables.Free11y), 0)
                 .build();
         Trajectory Free_12 = drive.trajectoryBuilder(Free_11.end(), true)
-                .splineTo(new Vector2d(variables.Near2xCenter - 7, variables.Near2y), Math.toRadians(90))
+                .splineTo(new Vector2d(variables.Near2xCenter - 6, variables.Near2y), Math.toRadians(90))
                 .build();
         Trajectory Free_13 = drive.trajectoryBuilder(Free_12.end())
                 .back (variables.NearBoard)
@@ -260,21 +260,21 @@ public class Auto_BlueNear extends LinearOpMode {
         while (timer.seconds() < 1);
 
 
-        if ((int) cX > 200 && (int) cX < 400){
+        if ((int) cX > 200 && (int) cX < 400 && opModeIsActive()){
             position = variables.CENTRE;
             drive.followTrajectory(Center_1);
         }
 
-        else if ((int) cX > 0 && (int) cX < 200){
+        else if ((int) cX > 0 && (int) cX < 200 && opModeIsActive()){
             position = variables.LEFT;
             drive.followTrajectory(Free_11);
         }
-        else if ((int) cX > 400 && (int) cX < 700){
+        else if ((int) cX > 400 && (int) cX < 700 && opModeIsActive()){
             position = variables.RIGHT;
             drive.followTrajectory(Obs_11);
 
         }
-        else {
+        else if (opModeIsActive()) {
             position = variables.NOTDETECTED;
             ClawPark();
             drive.followTrajectory(NF_11);
@@ -282,12 +282,12 @@ public class Auto_BlueNear extends LinearOpMode {
         controlHubCam.stopStreaming();
 
 
-        if (position != variables.NOTDETECTED) {
+        if (position != variables.NOTDETECTED && opModeIsActive()) {
             DropPixel(true, false);
             ClawPark();
         }
 
-        if (position == variables.NOTDETECTED) {
+        if (position == variables.NOTDETECTED && opModeIsActive()) {
             ArmUP();
             drive.followTrajectory(NF_12);
             DropPixel(true, true);
@@ -297,7 +297,7 @@ public class Auto_BlueNear extends LinearOpMode {
             drive.followTrajectory(NF_14);
         }
 
-        if (position == variables.CENTRE){
+        if (position == variables.CENTRE && opModeIsActive()){
             drive.followTrajectory(Center_2);
             ArmUP();
             drive.followTrajectory(Center_3);
@@ -308,7 +308,7 @@ public class Auto_BlueNear extends LinearOpMode {
             drive.followTrajectory(Center_5);
 
         }
-        if (position == variables.LEFT){
+        if (position == variables.LEFT && opModeIsActive()){
             drive.followTrajectory(Free_12);
             ArmUP();
             drive.followTrajectory(Free_13);
@@ -319,7 +319,7 @@ public class Auto_BlueNear extends LinearOpMode {
             drive.followTrajectory(Free_15);
 
         }
-        if (position == variables.RIGHT){
+        if (position == variables.RIGHT && opModeIsActive()){
             drive.followTrajectory(Obs_12);
             ArmUP();
             drive.followTrajectory(Obs_13);

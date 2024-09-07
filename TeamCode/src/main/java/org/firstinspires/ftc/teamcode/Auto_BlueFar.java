@@ -214,7 +214,7 @@ public class Auto_BlueFar extends LinearOpMode {
                 .back(variables.FarBack + 7)
                 .build();
         Trajectory Obs_12 = drive.trajectoryBuilder(Obs_117.end(), true)
-                .splineTo(new Vector2d(variables.Near2xCenter - 1, variables.Far2y), Math.toRadians(90)) //cia x kazkodel 29 kaip centre buvo?
+                .splineTo(new Vector2d(variables.Near2xCenter, variables.Far2y), Math.toRadians(90)) //cia x kazkodel 29 kaip centre buvo?
                 .build();
         Trajectory Obs_13 = drive.trajectoryBuilder(Obs_12.end())
                 .back(variables.NearBoard )
@@ -226,7 +226,7 @@ public class Auto_BlueFar extends LinearOpMode {
                 .back(variables.Park2)
                 .build();
         Trajectory Free_11 = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(variables.Free11x , (-1 * variables.Free11y) -3), 0)
+                .splineTo(new Vector2d(variables.Free11x , (-1 * variables.Free11y) -2), 0)
                 .build();
         Trajectory Free_115 = drive.trajectoryBuilder(Free_11.end())
                 .strafeLeft(variables.Far115Free)
@@ -238,7 +238,7 @@ public class Auto_BlueFar extends LinearOpMode {
                 .back(variables.FarBack)
                 .build();
         Trajectory Free_12 = drive.trajectoryBuilder(Free_117.end(), true)
-                .splineTo(new Vector2d(variables.Near2xCenter + 2, variables.Far2y), Math.toRadians(90))
+                .splineTo(new Vector2d(variables.Near2xCenter + 4, variables.Far2y), Math.toRadians(90))
                 .build();
         Trajectory Free_13 = drive.trajectoryBuilder(Free_12.end())
                 .back(variables.NearBoard)
@@ -285,18 +285,18 @@ public class Auto_BlueFar extends LinearOpMode {
         while (timer.seconds() < 6) ;
 
 
-        if ((int) cX > 200 && (int) cX < 400) {
+        if ((int) cX > 200 && (int) cX < 400 && opModeIsActive()) {
             position = variables.CENTRE;
             drive.followTrajectory(Center_1);
-        } else if ((int) cX > 0 && (int) cX < 200) {
+        } else if ((int) cX > 0 && (int) cX < 200 && opModeIsActive()) {
             position = variables.LEFT;
             drive.followTrajectory(Obs_11);
-        } else if ((int) cX > 400 && (int) cX < 700) {
+        } else if ((int) cX > 400 && (int) cX < 700 && opModeIsActive()) {
             position = variables.RIGHT;
             drive.followTrajectory(Free_11);
 
 
-        } else {
+        } else if(opModeIsActive()) {
             position = variables.NOTDETECTED;
             ClawPark();
             drive.followTrajectory(NF_01);
@@ -307,12 +307,12 @@ public class Auto_BlueFar extends LinearOpMode {
         controlHubCam.stopStreaming();
 
 
-        if (position != variables.NOTDETECTED) {
+        if (position != variables.NOTDETECTED && opModeIsActive()) {
             DropPixel(true, false);
             ClawPark();
         }
 
-        if (position == variables.NOTDETECTED) {
+        if (position == variables.NOTDETECTED && opModeIsActive()) {
             ArmUP();
             drive.followTrajectory(NF_12);
             DropPixel(true, true);
@@ -322,7 +322,7 @@ public class Auto_BlueFar extends LinearOpMode {
             drive.followTrajectory(NF_14);
         }
 
-        if (position == variables.CENTRE) {
+        if (position == variables.CENTRE && opModeIsActive()) {
             drive.followTrajectory(Center_15);
             drive.followTrajectory(Center_16);
             drive.turn(Math.toRadians(-90));
@@ -337,7 +337,7 @@ public class Auto_BlueFar extends LinearOpMode {
             drive.followTrajectory(Center_5);
 
         }
-        if (position == variables.RIGHT) {
+        if (position == variables.RIGHT && opModeIsActive()) {
             drive.followTrajectory(Free_115);
             drive.followTrajectory(Free_116);
             drive.turn(Math.toRadians(-90));
@@ -352,7 +352,7 @@ public class Auto_BlueFar extends LinearOpMode {
             drive.followTrajectory(Free_15);
 
         }
-        if (position == variables.LEFT) {
+        if (position == variables.LEFT && opModeIsActive()) {
             drive.followTrajectory(Obs_115);
             drive.followTrajectory(Obs_116);
             drive.turn(Math.toRadians(180));
